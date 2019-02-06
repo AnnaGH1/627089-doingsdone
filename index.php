@@ -42,13 +42,11 @@ $task_items = [
 ];
 
 
-function calculate_tasks_by_category ($arr, $el_type) {
+function calculate_tasks_by_category ($task_list, $task_category) {
     $counter = 0;
-    foreach ($arr as $el) {
-        if ($el['category_name'] === $el_type) {
+    foreach ($task_list as $task_item) {
+        if ($task_item['category_name'] === $task_category) {
             $counter += 1;
-        } else {
-            $counter;
         }
     }
     return $counter;
