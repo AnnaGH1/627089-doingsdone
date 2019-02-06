@@ -6,40 +6,54 @@ $task_items = [
     [
         'name' => 'Собеседование в IT компании',
         'date' => '01.12.2019',
-        'category' => 'Работа',
+        'category_name' => 'Работа',
         'done' => false
     ],
     [
         'name' => 'Выполнить тестовое задание',
         'date' => '25.12.2019',
-        'category' => 'Работа',
+        'category_name' => 'Работа',
         'done' => false
     ],
     [
         'name' => 'Сделать задание первого раздела',
         'date' => '21.12.2019',
-        'category' => 'Учеба',
+        'category_name' => 'Учеба',
         'done' => true
     ],
     [
         'name' => 'Встреча с другом',
         'date' => '22.12.2019',
-        'category' => 'Входящие',
+        'category_name' => 'Входящие',
         'done' => false
     ],
     [
         'name' => 'Купить корм для кота',
         'date' => 'Нет',
-        'category' => 'Домашние дела',
+        'category_name' => 'Домашние дела',
         'done' => false
     ],
     [
         'name' => 'Заказать пиццу',
         'date' => 'Нет',
-        'category' => 'Домашние дела',
+        'category_name' => 'Домашние дела',
         'done' => false
     ]
 ];
+
+
+function calculate_tasks_by_category ($arr, $el_type) {
+    $counter = 0;
+    foreach ($arr as $el) {
+        if ($el['category_name'] === $el_type) {
+            $counter += 1;
+        } else {
+            $counter;
+        }
+    }
+    return $counter;
+};
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -88,7 +102,7 @@ $task_items = [
                         <?php foreach ($category_names as $category_name): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?=$category_name;?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?php echo calculate_tasks_by_category($task_items, $category_name); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
@@ -134,7 +148,7 @@ $task_items = [
                                 </td>
 
                                 <td class="task__file">
-                                    <a class="download-link" href="#"><?=$task_item['category'];?>.psd</a>
+                                    <a class="download-link" href="#"><?=$task_item['category_name'];?>.psd</a>
                                 </td>
 
                                 <td class="task__date"><?=$task_item['date'];?></td>
