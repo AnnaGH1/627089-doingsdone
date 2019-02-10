@@ -42,18 +42,8 @@ $task_items = [
     ]
 ];
 
-function calculate_tasks_by_category ($task_list, $task_category) {
-    $counter = 0;
-    foreach ($task_list as $task_item) {
-        if ($task_item['category_name'] === $task_category) {
-            $counter += 1;
-        }
-    }
-    return $counter;
-};
 
-
-require_once('functions.php');
+require_once'functions.php';
 
 $page_content = include_template('index.php', [
     'show_complete_tasks' => $show_complete_tasks,
