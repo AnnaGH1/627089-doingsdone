@@ -6,7 +6,8 @@
  * @param string $task_category - значение ключа 'category_name'
  * @return int $counter - число задач
  */
-function calculate_tasks_by_category ($task_list, $task_category) {
+function calculate_tasks_by_category ($task_list, $task_category)
+{
     $counter = 0;
     foreach ($task_list as $task_item) {
         if ($task_item['category_name'] === $task_category) {
@@ -14,42 +15,25 @@ function calculate_tasks_by_category ($task_list, $task_category) {
         }
     }
     return $counter;
-};
+}
 
 /**
  * Функция проверяет срок выполнения задачи, если срок истекает в ближайшие 24 часа, возвращает true
- * @param array $task -
- * @return boolean $status_bool
+ * @param array $task - ассоциативный массив задачи
+ * @return boolean $status - статус задачи
  */
-function is_task_important ($task) {
+function is_task_important ($task)
+{
     if ($task['due_date'] === 'Нет') {
         return false;
     } else {
-//        $time_due = '23:59:59';
-//        $due_date_and_time = $task['due_date'] . ' ' . $time_due;
-//        $due_date_and_time_ts = strtotime($due_date_and_time);
-//        $current_ts = time();
-//        $secs_in_hour = 3600;
-//        $hours_before_due = floor(($due_date_and_time_ts - $current_ts) / $secs_in_hour);
-
-        // Как лучше числа или булевы? булевы не выводятся в print?
-        // $hours_before_due > 24 ? $status = 0 : $status = 1;
-        // print 'status number ' . $status;
-
-        $due_date = date_create($task['due_date']);
-        $current_date = date_create(date('d.m.Y'));
-        $diff_hours = date_diff($due_date, $current_date, $differenceFormat = '%h');
-//        print $diff_hours;
-
-
-        $diff_hours > 24 ? $status_bool = false : $status_bool = true;
-        // print 'status bool ' . $status_bool;
-
-        return $status_bool;
+        $due_date_and_time_ts = strtotime($task['due_date']);
+        $current_ts = time();
+        $hours_before_due = floor(($due_date_and_time_ts - $current_ts) / 3600);
+        $status = $hours_before_due > 24 ? false : true;
+        return $status;
     }
-};
-
-is_task_important($task_items[0]);
+}
 
 /**
  * Функция подключает шаблон с данными
@@ -57,7 +41,8 @@ is_task_important($task_items[0]);
  * @param array $data - ассоциативный массив, содержащий переменные для данного шаблона, имя ключа совпадает с именем переменной
  * @return string $result - пустая строка, если шаблон не существует, или код html
  */
-function include_template($name, $data) {
+function include_template($name, $data)
+{
 $name = 'templates/' . $name;
 $result = '';
 
