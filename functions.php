@@ -18,30 +18,38 @@ function calculate_tasks_by_category ($task_list, $task_category) {
 
 /**
  * Функция проверяет срок выполнения задачи, если срок истекает в ближайшие 24 часа, возвращает true
- * @param string $due_date - срок в формате, пригодном для strtotime()
+ * @param array $task -
  * @return boolean $status_bool
  */
-function check_if_due_within_24h ($due_date) {
-    if ($due_date === 'Нет') {
+function is_task_important ($task) {
+    if ($task['due_date'] === 'Нет') {
         return false;
     } else {
-        $time_due = '23:59:59';
-        $due_date_and_time = $due_date . ' ' . $time_due;
-        $due_date_and_time_ts = strtotime($due_date_and_time);
-        $current_ts = time();
-        $secs_in_hour = 3600;
-        $hours_before_due = floor(($due_date_and_time_ts - $current_ts) / $secs_in_hour);
+//        $time_due = '23:59:59';
+//        $due_date_and_time = $task['due_date'] . ' ' . $time_due;
+//        $due_date_and_time_ts = strtotime($due_date_and_time);
+//        $current_ts = time();
+//        $secs_in_hour = 3600;
+//        $hours_before_due = floor(($due_date_and_time_ts - $current_ts) / $secs_in_hour);
 
         // Как лучше числа или булевы? булевы не выводятся в print?
-        // $hours_before_due <= 24 ? $status = 1 : $status = 0;
+        // $hours_before_due > 24 ? $status = 0 : $status = 1;
         // print 'status number ' . $status;
 
-        $hours_before_due <= 24 ? $status_bool = true : $status_bool = false;
+        $due_date = date_create($task['due_date']);
+        $current_date = date_create(date('d.m.Y'));
+        $diff_hours = date_diff($due_date, $current_date, $differenceFormat = '%h');
+//        print $diff_hours;
+
+
+        $diff_hours > 24 ? $status_bool = false : $status_bool = true;
         // print 'status bool ' . $status_bool;
 
         return $status_bool;
     }
 };
+
+is_task_important($task_items[0]);
 
 /**
  * Функция подключает шаблон с данными
