@@ -6,43 +6,49 @@ $category_names = ['Входящие', 'Учеба', 'Работа', 'Домаш
 $task_items = [
     [
         'name' => 'Собеседование в IT компании',
-        'date' => '01.12.2019',
+        'due_date' => '01.12.2019',
         'category_name' => 'Работа',
         'done' => false
     ],
     [
         'name' => 'Выполнить тестовое задание',
-        'date' => '25.12.2019',
+        'due_date' => '25.12.2019',
         'category_name' => 'Работа',
         'done' => false
     ],
     [
         'name' => 'Сделать задание первого раздела',
-        'date' => '21.12.2019',
+        'due_date' => '21.12.2019',
         'category_name' => 'Учеба',
         'done' => true
     ],
     [
         'name' => 'Встреча с другом',
-        'date' => '22.12.2019',
+        'due_date' => '22.12.2019',
         'category_name' => 'Входящие',
         'done' => false
     ],
     [
         'name' => 'Купить корм для кота',
-        'date' => 'Нет',
+        'due_date' => 'Нет',
         'category_name' => 'Домашние дела',
         'done' => false
     ],
     [
         'name' => 'Заказать пиццу',
-        'date' => 'Нет',
+        'due_date' => 'Нет',
+        'category_name' => 'Домашние дела',
+        'done' => false
+    ],
+    [
+        'name' => 'Купить корм для попугая',
+        'due_date' => '09.02.2019',
         'category_name' => 'Домашние дела',
         'done' => false
     ]
 ];
 
-
+date_default_timezone_set("Europe/Moscow");
 require_once'functions.php';
 
 $page_content = include_template('index.php', [
