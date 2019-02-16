@@ -24,13 +24,13 @@ VALUES
 	('Заказать пиццу', NULL , 4, 1);
     
 -- Возвращает список проектов для одного пользователя
-SELECT name FROM category WHERE user_id LIKE 1;
+SELECT name FROM category WHERE user_id = 1;
 
 -- Возвращает список задач для одного проекта 
-SELECT name FROM task WHERE category_id LIKE 4;
+SELECT name FROM task WHERE category_id = 4;
 
 -- Помечает задачу как выполненную
-UPDATE task SET dt_complete='2019.02.16' WHERE id=6;
+UPDATE task SET dt_complete = '2019.02.16' WHERE id = 6;
 
 -- Обновляет название задачи по ее идентификатору
-UPDATE task SET name='Купить корм для рыбок' WHERE id=5;
+UPDATE task SET name = 'Купить корм для рыбок' WHERE id = 5;
