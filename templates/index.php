@@ -23,7 +23,7 @@
 
 <table class="tasks">
     <?php foreach ($task_items as $task_item): ?>
-        <?php if($show_complete_tasks === 1 || $task_item['dt_complete'] === false): ?>
+        <?php if($show_complete_tasks === 1 || $task_item['dt_complete'] === null): ?>
             <tr class="tasks__item task <?=$task_item['dt_complete'] ? 'task--completed' : '';?> <?=is_task_important($task_item) ? 'task--important' : '';?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
@@ -36,7 +36,7 @@
                     <a class="download-link" href="#"><?=strip_tags($task_item['category_name']);?>.psd</a>
                 </td>
 
-                <td class="task__date"><?=strip_tags($task_item['dt_due']);?></td>
+                <td class="task__date"><?=strip_tags($task_item['due']);?></td>
             </tr>
         <?php endif; ?>
     <?php endforeach; ?>

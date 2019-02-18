@@ -43,18 +43,49 @@ function is_task_important ($task)
  */
 function include_template($name, $data)
 {
-$name = 'templates/' . $name;
-$result = '';
+    $name = 'templates/' . $name;
+    $result = '';
 
-if (!is_readable($name)) {
-return $result;
+    if (!is_readable($name)) {
+        return $result;
+    }
+
+    ob_start();
+    extract($data);
+    require $name;
+
+    $result = ob_get_clean();
+
+    return $result;
 }
 
-ob_start();
-extract($data);
-require $name;
+/**
+ * Функция получает ассоциативный массив категорий при наличии соединения
+ * @param $con - соединение с БД
+ * @return array - ассоциативный массив категорий или пустой массив
+ */
+function get_categories($con)
+{
+    $sql = 'SELECT * FROM category WHERE user_id = 1';
+    $result = mysqli_query($con, $sql);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
 
-$result = ob_get_clean();
+/**
+ * Функция получает ассоциативный массив задач для пользователя и их категории при наличии соединения
+ * @param $con - соединение с БД
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks($con)
+{
+    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task JOIN category ON category.id=task.category_id AND category.user_id = 1 WHERE task.user_id = 1';
+    $result = mysqli_query($con, $sql);
 
-return $result;
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
