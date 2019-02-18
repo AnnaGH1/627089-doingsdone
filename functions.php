@@ -24,10 +24,10 @@ function calculate_tasks_by_category ($task_list, $task_category)
  */
 function is_task_important ($task)
 {
-    if ($task['due_date'] === 'Нет') {
+    if ($task['dt_due'] === NULL) {
         return false;
     } else {
-        $due_date_and_time_ts = strtotime($task['due_date']);
+        $due_date_and_time_ts = strtotime($task['dt_due']);
         $current_ts = time();
         $hours_before_due = floor(($due_date_and_time_ts - $current_ts) / 3600);
         $status = $hours_before_due > 24 ? false : true;
