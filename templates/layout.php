@@ -44,7 +44,7 @@
                     <ul class="main-navigation__list">
                         <?php foreach ($categories as $category): ?>
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link" href="#"><?=$category['name'];?></a>
+                                <a class="main-navigation__list-item-link" href="<?=$category['url'];?>"><?=$category['name'];?></a>
                                 <span class="main-navigation__list-item-count">
                                     <?php echo calculate_tasks_by_category($task_items, $category['name']); ?>
                                 </span>

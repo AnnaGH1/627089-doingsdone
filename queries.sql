@@ -42,3 +42,6 @@ INSERT INTO task(name, dt_due, category_id, user_id)
 VALUES
 ('Купить подарок другу на день рождения', '2019-03-05 00:00:00', 1, 1),
 ('Починить стиральную машину', NULL, 4, 1);
+
+-- Добавляет поле URL с параметром запроса для каждой категории
+ALTER TABLE category ADD url VARCHAR(64);
