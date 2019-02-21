@@ -110,7 +110,8 @@ function include_template($name, $data)
  */
 function get_categories($con, $data)
 {
-    $sql = 'SELECT * FROM category WHERE user_id = ?';
+    $sql = 'SELECT c.*, COUNT(t.id) AS tasks_count FROM category AS c 
+            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -129,7 +130,7 @@ function get_categories($con, $data)
 function get_tasks($con, $data)
 {
     $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
-            JOIN category ON category.id=task.category_id AND category.user_id = ? WHERE task.user_id = ?';
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -148,7 +149,7 @@ function get_tasks($con, $data)
 function get_tasks_by_category($con, $data)
 {
     $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") as due FROM task 
-            JOIN category ON category.id=task.category_id AND category.user_id = ? WHERE task.user_id = ? AND category.id = ?';
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? AND category.id = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
