@@ -1,4 +1,47 @@
 <?php
+/**
+ * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
+ *
+ * @param mysqli $link Ресурс соединения
+ * @param string $sql SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return mysqli_stmt Подготовленное выражение
+ */
+function db_get_prepare_stmt($link, $sql, $data = []) {
+    $stmt = mysqli_prepare($link, $sql);
+
+    if ($data) {
+        $types = '';
+        $stmt_data = [];
+
+        foreach ($data as $value) {
+            $type = null;
+
+            if (is_int($value)) {
+                $type = 'i';
+            }
+            else if (is_string($value)) {
+                $type = 's';
+            }
+            else if (is_double($value)) {
+                $type = 'd';
+            }
+
+            if ($type) {
+                $types .= $type;
+                $stmt_data[] = $value;
+            }
+        }
+
+        $values = array_merge([$stmt, $types], $stmt_data);
+
+        $func = 'mysqli_stmt_bind_param';
+        $func(...$values);
+    }
+
+    return $stmt;
+}
 
 /**
  * Функция подсчитывает число задач, относящихся к указанной категории
@@ -60,14 +103,18 @@ function include_template($name, $data)
 }
 
 /**
- * Функция получает ассоциативный массив категорий при наличии соединения
- * @param $con - соединение с БД
+ * Функция получает ассоциативный массив категорий
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя
  * @return array - ассоциативный массив категорий или пустой массив
  */
-function get_categories($con)
+function get_categories($con, $data)
 {
-    $sql = 'SELECT * FROM category WHERE user_id = 1';
-    $result = mysqli_query($con, $sql);
+    $sql = 'SELECT c.*, COUNT(t.id) AS tasks_count FROM category AS c 
+            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     if ($result === false) {
         return [];
     }
@@ -75,17 +122,53 @@ function get_categories($con)
 }
 
 /**
- * Функция получает ассоциативный массив задач для пользователя и их категории при наличии соединения
- * @param $con - соединение с БД
+ * Функция получает ассоциативный массив задач для пользователя и их категории
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя
  * @return array - ассоциативный массив задач или пустой массив
  */
-function get_tasks($con)
+function get_tasks($con, $data)
 {
-    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task JOIN category ON category.id=task.category_id AND category.user_id = 1 WHERE task.user_id = 1';
-    $result = mysqli_query($con, $sql);
-
+    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
     if ($result === false) {
         return [];
     }
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+/**
+ * Функция получает ассоциативный массив задач для пользователя в выбранной категории
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя и id категории
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_by_category($con, $data)
+{
+    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") as due FROM task 
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? AND category.id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Функция создает параметр запроса с ключом category_id
+ * @param string $category_id - значение параметра запроса
+ * @return string $query - параметр запроса
+ */
+function get_category_url($category_id)
+{
+    $params = $_GET;
+    $params['category_id'] = $category_id;
+    $query = http_build_query($params);
+    return $query;
+}
+
