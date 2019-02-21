@@ -13,18 +13,21 @@ $user_id = '1';
 $task_items = get_tasks($con, [$user_id, $user_id]);
 $categories = get_categories($con, [$user_id]);
 
-$script_name = pathinfo(__FILE__, PATHINFO_BASENAME);
-
-foreach ($categories as $category) {
-    $url = get_url($script_name,'id', $category['id']);
-    db_set_category_url($con, [$url, $category['id']]);
+if (isset($_GET['category_id'])) {
+    $category_id = $_GET['category_id'];
+    $task_items = get_tasks_by_category($con, [$user_id, $user_id, $category_id]);
+}
+else if ($_GET['category_id'] === false) {
+    http_response_code(404);
+}
+else {
+    $task_items = get_tasks($con, [$user_id, $user_id]);
 }
 
 $page_content = include_template('index.php', [
     'show_complete_tasks' => $show_complete_tasks,
     'task_items' => $task_items
 ]);
-
 
 $layout_content = include_template('layout.php', [
     'title' => $title,
@@ -35,11 +38,3 @@ $layout_content = include_template('layout.php', [
 
 print($layout_content);
 
-$filter_field = '';
-
-//if (isset($_GET['category.id'] && $_GET['category.id'] === '1')) {
-//    $filter_field = 'category.id';
-//    print 'id 1 selected';
-//} else {
-//    print 'other category selected';
-//}
