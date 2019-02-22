@@ -111,7 +111,7 @@ function include_template($name, $data)
 function get_categories($con, $data)
 {
     $sql = 'SELECT c.*, COUNT(t.id) AS tasks_count FROM category AS c 
-            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id';
+            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id ORDER BY c.name ASC';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
