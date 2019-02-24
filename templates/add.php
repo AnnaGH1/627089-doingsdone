@@ -1,11 +1,11 @@
 <main class="content__main">
     <h2 class="content__main-heading">Добавление задачи</h2>
 
-    <form class="form"  action="task-validate.php" method="post">
+    <form class="form"  action="<?php echo $_SERVER['PHP_SELF']?>" enctype="multipart/form-data" method="POST">
         <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите название">
+            <input class="form__input" type="text" name="name" id="name" value="<?php if (isset($_POST['name'])){ echo $_POST['name']; }?>" placeholder="Введите название">
         </div>
 
         <div class="form__row">
@@ -13,7 +13,9 @@
 
             <select class="form__input form__input--select" name="project" id="project">
                 <?php foreach ($categories as $category): ?>
-                    <option value=""><?=$category['name'];?></option>
+                    <option value="<?=$category['id'];?>"<?php if ((isset($_POST['project'])) && (intval($_POST['project']) === $category['id'])){ echo 'selected'; }?>>
+                        <?=$category['name'];?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -21,7 +23,7 @@
         <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
-            <input class="form__input form__input--date" type="date" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+            <input class="form__input form__input--date" type="date" name="date" id="date" value="<?php if (isset($_POST['date'])){ echo $_POST['date']; }?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
         </div>
 
         <div class="form__row">
@@ -37,7 +39,7 @@
         </div>
 
         <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="" value="Добавить">
+            <input class="button" type="submit" name="action" value="Добавить">
         </div>
     </form>
 </main>
