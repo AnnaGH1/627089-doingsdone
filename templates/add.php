@@ -9,7 +9,11 @@
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
             <input
-                class="form__input"
+                class="form__input <?=
+                    isset($errors['name'])
+                    ? 'form__input--error'
+                    : ''
+                ?>"
                 type="text"
                 name="name"
                 id="name"
@@ -20,16 +24,25 @@
                         ?>"
                 placeholder="Введите название"
             >
+            <p class="form__message"><?=
+                isset($errors['name'])
+                    ? $errors['name']
+                    : ''
+                ?>
+            </p>
         </div>
 
         <div class="form__row">
             <label class="form__label" for="project">Проект</label>
 
             <select
-                class="form__input form__input--select"
+                class="form__input form__input--select <?=
+                                                            isset($errors['project'])
+                                                            ? 'form__input--error'
+                                                            : ''
+                                                        ?>"
                 name="project"
                 id="project">
-                    <option value="" selected>Без проекта</option>
                 <?php foreach ($categories as $category): ?>
                     <option
                         value="<?=$category['id'];?>"
@@ -43,13 +56,23 @@
                     </option>
                 <?php endforeach; ?>
             </select>
+            <p class="form__message"><?=
+                isset($errors['project'])
+                    ? $errors['project']
+                    : ''
+                ?>
+            </p>
         </div>
 
         <div class="form__row">
             <label class="form__label" for="date">Дата выполнения</label>
 
             <input
-                class="form__input form__input--date"
+                class="form__input form__input--date <?=
+                                                    isset($errors['date'])
+                                                    ? 'form__input--error'
+                                                    : ''
+                                                    ?>"
                 type="date"
                 name="date"
                 id="date"
@@ -59,6 +82,12 @@
                             : ''
                         ?>"
                 placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+            <p class="form__message"><?=
+                isset($errors['date'])
+                    ? $errors['date']
+                    : ''
+                ?>
+            </p>
         </div>
 
         <div class="form__row">

@@ -28,15 +28,23 @@
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?=$task_item['dt_complete'] === true ? 'checked' : ''; ?>>
-                        <span class="checkbox__text"><?=strip_tags($task_item['name']);?></span>
+                        <span class="checkbox__text">
+                            <?=strip_tags($task_item['name']);?>
+                        </span>
                     </label>
                 </td>
 
                 <td class="task__file">
-                    <a class="download-link" href="#"><?=strip_tags($task_item['category_name']);?>.psd</a>
+                    <?php if ($task_item['file'] !== null): ?>
+                        <a class="download-link" href="#">
+                            <?=strip_tags($task_item['file']);?>
+                        </a>
+                    <?php endif; ?>
                 </td>
 
-                <td class="task__date"><?=strip_tags($task_item['due']);?></td>
+                <td class="task__date">
+                    <?=strip_tags($task_item['due']);?>
+                </td>
             </tr>
         <?php endif; ?>
     <?php endforeach; ?>

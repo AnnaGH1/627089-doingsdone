@@ -13,8 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 //    Сохранить данные в БД или показать ошибки
     if (count($errors) === 0) {
-        $file_url = '';
 
+        $date = null;
+        if (!empty($_POST['date'])) {
+            $date = date('Y-m-d', strtotime($_POST['date']));
+        }
+
+        $file_url = null;
         if (!empty($_FILES['preview']['tmp_name'])) {
             $file_name = $_FILES['preview']['name'];
             $file_path = __DIR__ . '/uploads/';
@@ -22,17 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
         }
 
-        db_add_task($con, [
+        $task_new = db_add_task($con, [
             'name' => $_POST['name'],
-            'date' => $_POST['date'],
+            'date' => $date,
             'file' => $file_url,
             'category_id' => $_POST['project'],
             'user_id' => intval($user_id)
         ]);
 
-        header('Location: http://' . $_SERVER['SERVER_NAME']);
-    } else {
-        var_dump($errors);
+        if ($task_new > 0) {
+            header('Location: http://' . $_SERVER['SERVER_NAME']);
+        }
     }
 }
 

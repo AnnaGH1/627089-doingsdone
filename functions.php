@@ -26,6 +26,8 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
             }
             else if (is_double($value)) {
                 $type = 'd';
+            } else {
+                $type = 's';
             }
 
             if ($type) {
@@ -130,7 +132,7 @@ function get_categories($con, $data)
 function get_tasks($con, $data)
 {
     $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
-            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ?';
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -183,7 +185,7 @@ function validate_task_form ($data, $categories)
 
     //    Валидация поля с названием задачи
     if (empty(trim($data['name']))) {
-        $errors['name'] = 'Поле Название должно быть заполнено';
+        $errors['name'] = 'Поле должно быть заполнено';
     }
 
 //    Валидация поля с названием проекта
@@ -200,6 +202,7 @@ function validate_task_form ($data, $categories)
 
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
+            var_dump($errors['project']);
         };
     }
 
@@ -226,9 +229,6 @@ function db_add_task ($con, $data)
     $sql = 'INSERT INTO task (name, dt_due, file, category_id, user_id) 
             VALUES (?, ?, ?, ?, ?)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
-    $result = mysqli_stmt_execute($stmt);
-    if ($result) {
-        $result = mysqli_insert_id($con);
-    }
-    return $result;
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
 }

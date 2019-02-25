@@ -25,7 +25,6 @@ $page_content = include_template('index.php', [
 $layout_content = include_template('layout.php', [
     'title' => $title,
     'categories' => $categories,
-//    'task_items' => $task_items,
     'page_content' => $page_content
 ]);
 
