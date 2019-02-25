@@ -1,5 +1,5 @@
--- CREATE SCHEMA `627089-doingsdone` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
--- USE `627089-doingsdone`;
+CREATE SCHEMA `627089-doingsdone` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+USE `627089-doingsdone`;
 CREATE TABLE category (
 id INT AUTO_INCREMENT PRIMARY KEY, 
 name VARCHAR(64) NOT NULL,

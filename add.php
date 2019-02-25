@@ -1,87 +1,45 @@
 <?php
-
 require_once 'connection.php';
 require_once 'functions.php';
 
-$title = 'Дела в порядке';
-
+$title = 'Дела в порядке - Добавление задачи';
 $user_id = '1';
-
 $categories = get_categories($con, [$user_id]);
+$errors = [];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-if (($_SERVER['REQUEST_METHOD'] === 'POST') && (!empty($_POST['action']))) {
+    $errors = validate_task_form($_POST, $categories);
 
-    if (isset($_POST['name'])) {
-        $name = trim($_POST['name']);
-//        $name = filter_var($name, FILTER_SANITIZE_STRING); // add user message
-    }
+//    Сохранить данные в БД или показать ошибки
+    if (count($errors) === 0) {
+        $file_url = '';
 
-    if (isset($_POST['project'])) {
-        $category = $_POST['project'];
-    }
-
-    if (isset($_POST['date'])) {
-        $date = $_POST['date'];
-    }
-
-    if (isset($_FILES['preview'])) {
-        $file = $_FILES['preview'];
-    }
-
-    $errors = [];
-
-//    Валидация поля с названием задачи
-    if (empty($name)) {
-        $errors['name'] = 'Поле Название должно быть заполнено';
-    }
-
-    if(!preg_match('/[A-Za-z]+/', $name)) {
-        $errors['name'] = 'Поле Название должно состоять из букв или букв и цифр';
-    }
-
-
-//    Валидация поля с названием проекта
-    if (!empty($category)) {
-        $user_category = intval($category);
-        $category_valid = false;
-
-        foreach ($categories as $category) {
-            if ($user_category === $category['id']) {
-                $category_valid = true;
-                break;
-            }
+        if (!empty($_FILES['preview']['tmp_name'])) {
+            $file_name = $_FILES['preview']['name'];
+            $file_path = __DIR__ . '/uploads/';
+            $file_url = '/uploads/' . $file_name;
+            move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
         }
 
-        if ($category_valid === false) {
-            $errors['project'] = 'Проект не существует';
-        };
-    }
+        db_add_task($con, [
+            'name' => $_POST['name'],
+            'date' => $_POST['date'],
+            'file' => $file_url,
+            'category_id' => $_POST['project'],
+            'user_id' => intval($user_id)
+        ]);
 
-//    Валидация поля с датой
-    if (!empty($date)) {
-        if ($date <= time()) {
-            $errors['date'] = 'Дата должна быть больше или равна текущей';
-        }
-    }
-
-//    Поле загрузки файла
-    if (!empty($_FILES)) {
-        var_dump($_FILES);
-    }
-
-
-//    Вывод ошибок
-    if (count($errors)) {
-        var_dump($errors);
+        header('Location: http://' . $_SERVER['SERVER_NAME']);
     } else {
-        header('Location: http://doingsdone/index.php');
+        var_dump($errors);
     }
 }
 
 
 $task_form = include_template('add.php', [
     'categories' => $categories,
+    'errors' => $errors
 ]);
 
 $layout_content = include_template('layout.php', [
