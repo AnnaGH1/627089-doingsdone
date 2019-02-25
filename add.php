@@ -23,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!empty($_FILES['preview']['tmp_name'])) {
             $file_name = $_FILES['preview']['name'];
             $file_path = __DIR__ . '/uploads/';
+            if (!is_dir($file_path)) {
+                mkdir($file_path, 0777);
+            }
             $file_url = '/uploads/' . $file_name;
             move_uploaded_file($_FILES['preview']['tmp_name'], $file_path . $file_name);
         }

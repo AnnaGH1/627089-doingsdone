@@ -36,9 +36,7 @@
 
                 <td class="task__file">
                     <?php if ($task_item['file'] !== null): ?>
-                        <a class="download-link" href="#">
-                            <?=strip_tags($task_item['file']);?>
-                        </a>
+                        <a class="download-link" href="<?=strip_tags($task_item['file']);?>"></a>
                     <?php endif; ?>
                 </td>
 
