@@ -26,6 +26,8 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
             }
             else if (is_double($value)) {
                 $type = 'd';
+            } else {
+                $type = 's';
             }
 
             if ($type) {
@@ -111,7 +113,7 @@ function include_template($name, $data)
 function get_categories($con, $data)
 {
     $sql = 'SELECT c.*, COUNT(t.id) AS tasks_count FROM category AS c 
-            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id';
+            LEFT JOIN task AS t ON c.id = t.category_id WHERE c.user_id = ? GROUP BY c.id ORDER BY c.name ASC';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -130,7 +132,7 @@ function get_categories($con, $data)
 function get_tasks($con, $data)
 {
     $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
-            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ?';
+            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -172,3 +174,61 @@ function get_category_url($category_id)
     return $query;
 }
 
+/**
+ * @param array $data - данные из формы
+ * @param array $categories - категории для списка проектов
+ * @return array $errors - массив ошибок
+ */
+function validate_task_form ($data, $categories)
+{
+    $errors = [];
+
+    //    Валидация поля с названием задачи
+    if (empty(trim($data['name']))) {
+        $errors['name'] = 'Поле должно быть заполнено';
+    }
+
+//    Валидация поля с названием проекта
+    if (!empty($data['project'])) {
+        $user_category = intval($data['project']);
+        $category_valid = false;
+
+        foreach ($categories as $category) {
+            if ($user_category === $category['id']) {
+                $category_valid = true;
+                break;
+            }
+        }
+
+        if ($category_valid === false) {
+            $errors['project'] = 'Проект не существует';
+            var_dump($errors['project']);
+        };
+    }
+
+//    Валидация поля с датой
+    if (!empty($data['date'])) {
+
+        if (strtotime($data['date']) < time()) {
+            $errors['date'] = 'Дата должна быть больше или равна текущей';
+        }
+    }
+
+    return $errors;
+}
+
+
+/**
+ * Функция добавляет задачу в БД
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return bool|int|string - id последнего запроса
+ */
+function db_add_task ($con, $data)
+{
+    $sql = 'INSERT INTO task (name, dt_due, file, category_id, user_id) 
+            VALUES (?, ?, ?, ?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}

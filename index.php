@@ -1,5 +1,4 @@
 <?php
-
 date_default_timezone_set("Europe/Moscow");
 
 require_once 'connection.php';
@@ -26,7 +25,6 @@ $page_content = include_template('index.php', [
 $layout_content = include_template('layout.php', [
     'title' => $title,
     'categories' => $categories,
-    'task_items' => $task_items,
     'page_content' => $page_content
 ]);
 
