@@ -175,6 +175,7 @@ function get_category_url($category_id)
 }
 
 /**
+ * Функция валидирует данные формы добавления задачи
  * @param array $data - данные из формы
  * @param array $categories - категории для списка проектов
  * @return array $errors - массив ошибок
@@ -219,6 +220,38 @@ function validate_task_form ($data, $categories)
 
 
 /**
+ * Функция валидирует данные формы добавления пользователя
+ * @param array $data - данные из формы
+ * @return array $errors - массив ошибок
+ */
+function validate_register_form ($data)
+{
+    $errors = [];
+
+//    Валидация поля E-mail
+    if (empty($data['email'])) {
+        $errors['email'] = 'Поле E-mail обязательное';
+    } else if (!filter_var(($_POST['email']), FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'E-mail введён некорректно';
+    }
+
+//    Валидация поля Пароль
+    if (empty($data['password'])) {
+        $errors['password'] = 'Поле Пароль обязательное';
+    } else if (strlen($data['password']) < 8) {
+        $errors['password'] = 'Пароль должен содержать не менее 8 символов';
+    }
+
+//    Валидация поля Имя
+    if (empty($data['name'])) {
+        $errors['name'] = 'Поле Имя обязательное';
+    }
+
+    return $errors;
+}
+
+
+/**
  * Функция добавляет задачу в БД
  * @param $con mysqli - ресурс соединения
  * @param $data array - данные для запроса
@@ -228,6 +261,21 @@ function db_add_task ($con, $data)
 {
     $sql = 'INSERT INTO task (name, dt_due, file, category_id, user_id) 
             VALUES (?, ?, ?, ?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+/**
+ * Функция добавляет пользователя в БД
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return bool|int|string - id последнего запроса
+ */
+function db_add_user ($con, $data)
+{
+    $sql = 'INSERT INTO user (name, email, password) 
+            VALUES (?, ?, ?)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);
