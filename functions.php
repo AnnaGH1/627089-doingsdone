@@ -105,6 +105,24 @@ function include_template($name, $data)
 }
 
 /**
+ * Функция получает ассоциативный массив пользователей
+ * @param mysqli $con - ресурс соединения
+ * @return array - ассоциативный массив пользователей или пустой массив
+ */
+function get_users($con)
+{
+    $sql = 'SELECT email, id FROM user';
+    $stmt = db_get_prepare_stmt($con, $sql);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+
+/**
  * Функция получает ассоциативный массив категорий
  * @param mysqli $con - ресурс соединения
  * @param array $data - данные для запроса - id пользователя
@@ -175,6 +193,7 @@ function get_category_url($category_id)
 }
 
 /**
+ * Функция валидирует данные формы добавления задачи
  * @param array $data - данные из формы
  * @param array $categories - категории для списка проектов
  * @return array $errors - массив ошибок
@@ -202,7 +221,6 @@ function validate_task_form ($data, $categories)
 
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
-            var_dump($errors['project']);
         };
     }
 
@@ -219,6 +237,44 @@ function validate_task_form ($data, $categories)
 
 
 /**
+ * Функция валидирует данные формы добавления пользователя
+ * @param array $data - данные из формы
+ * @param array $users - данные пользователей
+ * @return array $errors - массив ошибок
+ */
+function validate_register_form ($data, $users)
+{
+    $errors = [];
+
+//    Валидация поля E-mail
+    if (empty($data['email'])) {
+        $errors['email'] = 'Поле E-mail обязательное';
+    } else if (!filter_var(($_POST['email']), FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'E-mail введён некорректно';
+    } else {
+        foreach ($users as $user) {
+            if ($data['email'] === $user['email']) {
+                $errors['email'] = 'E-mail уже занят';
+                break;
+            }
+        }
+    }
+
+//    Валидация поля Пароль
+    if (empty($data['password'])) {
+        $errors['password'] = 'Поле Пароль обязательное';
+    }
+
+//    Валидация поля Имя
+    if (empty($data['name'])) {
+        $errors['name'] = 'Поле Имя обязательное';
+    }
+
+    return $errors;
+}
+
+
+/**
  * Функция добавляет задачу в БД
  * @param $con mysqli - ресурс соединения
  * @param $data array - данные для запроса
@@ -228,6 +284,21 @@ function db_add_task ($con, $data)
 {
     $sql = 'INSERT INTO task (name, dt_due, file, category_id, user_id) 
             VALUES (?, ?, ?, ?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+/**
+ * Функция добавляет пользователя в БД
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return bool|int|string - id последнего запроса
+ */
+function db_add_user ($con, $data)
+{
+    $sql = 'INSERT INTO user (name, email, password) 
+            VALUES (?, ?, ?)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);
