@@ -105,6 +105,24 @@ function include_template($name, $data)
 }
 
 /**
+ * Функция получает ассоциативный массив пользователей
+ * @param mysqli $con - ресурс соединения
+ * @return array - ассоциативный массив пользователей или пустой массив
+ */
+function get_users($con)
+{
+    $sql = 'SELECT email, id FROM user';
+    $stmt = db_get_prepare_stmt($con, $sql);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+
+/**
  * Функция получает ассоциативный массив категорий
  * @param mysqli $con - ресурс соединения
  * @param array $data - данные для запроса - id пользователя
@@ -203,7 +221,6 @@ function validate_task_form ($data, $categories)
 
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
-            var_dump($errors['project']);
         };
     }
 
@@ -222,9 +239,10 @@ function validate_task_form ($data, $categories)
 /**
  * Функция валидирует данные формы добавления пользователя
  * @param array $data - данные из формы
+ * @param array $users - данные пользователей
  * @return array $errors - массив ошибок
  */
-function validate_register_form ($data)
+function validate_register_form ($data, $users)
 {
     $errors = [];
 
@@ -233,13 +251,18 @@ function validate_register_form ($data)
         $errors['email'] = 'Поле E-mail обязательное';
     } else if (!filter_var(($_POST['email']), FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'E-mail введён некорректно';
+    } else {
+        foreach ($users as $user) {
+            if ($data['email'] === $user['email']) {
+                $errors['email'] = 'E-mail уже занят';
+                break;
+            }
+        }
     }
 
 //    Валидация поля Пароль
     if (empty($data['password'])) {
         $errors['password'] = 'Поле Пароль обязательное';
-    } else if (strlen($data['password']) < 8) {
-        $errors['password'] = 'Пароль должен содержать не менее 8 символов';
     }
 
 //    Валидация поля Имя

@@ -55,7 +55,7 @@
                         >
                         <p class="form__message">
                             <?=
-                            isset($errors['email'])
+                                isset($errors['email'])
                                 ? $errors['email']
                                 : ''
                             ?>
@@ -79,7 +79,7 @@
                         <p
                             class="form__message">
                             <?=
-                            isset($errors['password'])
+                                isset($errors['password'])
                                 ? $errors['password']
                                 : ''
                             ?>
@@ -98,7 +98,11 @@
                             type="text"
                             name="name"
                             id="name"
-                            value=""
+                            value="<?=
+                                isset($_POST['name'])
+                                ? strip_tags($_POST['name'])
+                                : ''
+                            ?>"
                             placeholder="Введите имя">
                         <p class="form__message">
                             <?=
@@ -116,7 +120,6 @@
                                 ? 'Пожалуйста, исправьте ошибки в форме'
                                 : ''
                             ?>
-<!--                            Пожалуйста, исправьте ошибки в форме-->
                         </p>
 
                         <input class="button" type="submit" name="" value="Зарегистрироваться">
