@@ -7,7 +7,7 @@ require_once 'functions.php';
 $title = 'Дела в порядке';
 $show_complete_tasks = rand(0, 1);
 
-$user_id = '2';
+$user_id = null;
 
 $categories = get_categories($con, [$user_id]);
 
@@ -22,22 +22,17 @@ $page_content = include_template('index.php', [
     'task_items' => $task_items
 ]);
 
-$guest_header = include_template('guest.php', []);
 
-
-if ($user_id === '') {
-    $layout_content = include_template('layout.php', [
-        'title' => $title,
-        'guest_header' => $guest_header,
-        'user_id' => $user_id
-    ]);
+if ($user_id === null) {
+    $guest_content = include_template('guest.php', []);
+    print($guest_content);
 } else {
     $layout_content = include_template('layout.php', [
         'title' => $title,
         'categories' => $categories,
         'page_content' => $page_content
     ]);
+    print($layout_content);
 }
 
-print($layout_content);
 

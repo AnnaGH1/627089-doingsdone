@@ -111,7 +111,7 @@ function include_template($name, $data)
  */
 function get_users($con)
 {
-    $sql = 'SELECT email, id FROM user';
+    $sql = 'SELECT * FROM user';
     $stmt = db_get_prepare_stmt($con, $sql);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -273,6 +273,47 @@ function validate_register_form ($data, $users)
     return $errors;
 }
 
+
+function validate_auth_form ($data, $users)
+{
+    $errors = [];
+    $user_valid = null;
+
+    //    Валидация поля E-mail
+    if (empty($data['email'])) {
+        $errors['email'] = 'Поле E-mail обязательное';
+    } else if (!filter_var(($data['email']), FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'E-mail введён некорректно';
+    }
+
+    foreach ($users as $user) {
+        if ($data['email'] === $user['email']) {
+            $user_valid = $user;
+            break;
+        }
+    }
+
+    //    Валидация поля Пароль
+    if (empty($data['password'])) {
+        $errors['password'] = 'Поле пароль обязательное';
+    }
+
+    //    Валидация совпадения паролей
+    if (!empty($data['email']) && !empty($data['password'])) {
+        $password_match = password_verify($data['password'], $user_valid['password']);
+        if ($password_match) {
+            session_start();
+            $_SESSION['id'] = $user_valid['id'];
+            $_SESSION['name'] = $user_valid['name'];
+            $_SESSION['email'] = $user_valid['email'];
+            var_dump('Hi ' . $user_valid['name'] . ' Welcome to Doingsdone!');
+        } else {
+            $errors['match'] = 'Данные не верны';
+        };
+    }
+
+    return $errors;
+}
 
 /**
  * Функция добавляет задачу в БД
