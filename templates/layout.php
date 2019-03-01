@@ -14,7 +14,6 @@
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
-        <?php if (!isset($guest_header)) : ?>
         <header class="main-header">
             <a href="/">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
@@ -28,25 +27,15 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p>Константин</p>
+                        <p><?= $user_name ?></p>
 
-                        <a href="#">Выйти</a>
+                        <a href="logout.php">Выйти</a>
                     </div>
                 </div>
             </div>
         </header>
-        <?php endif; ?>
-
-        <div>
-            <?=
-                isset($guest_header)
-                ? $guest_header
-                : ''
-            ?>
-        </div>
 
         <div class="content">
-            <?php if (!isset($guest_header)) : ?>
                 <section class="content__side">
                     <h2 class="content__side-heading">Проекты</h2>
 
@@ -54,9 +43,20 @@
                         <ul class="main-navigation__list">
                             <?php foreach ($categories as $category): ?>
                                 <li class="main-navigation__list-item">
-                                    <a class="main-navigation__list-item-link" href="index.php?<?=get_category_url($category['id']);?>"><?=$category['name'];?></a>
-                                    <span class="main-navigation__list-item-count">
-                                        <?php echo $category['tasks_count']; ?>
+                                    <a
+                                        class="main-navigation__list-item-link"
+                                        href="index.php?<?=
+                                            get_category_url($category['id']);
+                                        ?>">
+                                        <?=
+                                            $category['name'];
+                                        ?>
+                                    </a>
+                                    <span
+                                        class="main-navigation__list-item-count">
+                                            <?php echo
+                                                $category['tasks_count'];
+                                            ?>
                                     </span>
                                 </li>
                             <?php endforeach; ?>
@@ -66,13 +66,8 @@
                     <a class="button button--transparent button--plus content__side-button"
                        href="pages/form-project.html" target="project_add">Добавить проект</a>
                 </section>
-            <?php endif; ?>
 
-            <main class="content__main"><?=
-                isset($page_content)
-                ? $page_content
-                : ''
-                ?></main>
+            <main class="content__main"><?= $page_content ?></main>
         </div>
     </div>
 </div>

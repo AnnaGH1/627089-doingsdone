@@ -1,9 +1,24 @@
 <?php
+
+session_start();
+
 require_once 'connection.php';
 require_once 'functions.php';
 
 $title = 'Дела в порядке - Добавление задачи';
-$user_id = '1';
+$user_id = null;
+$user_name = null;
+
+// Проверка открытой сессии
+if (isset($_SESSION['id'])) {
+    $user_id = $_SESSION['id'];
+    $user_name = $_SESSION['name'];
+} else {
+    header("HTTP/1.0 403 Forbidden");
+    echo '<div>Требуется аутентификация пользователя, доступ запрещен <a href="index.php">Перейти на главную страницу</a></div>';
+    exit;
+}
+
 $categories = get_categories($con, [$user_id]);
 $errors = [];
 
@@ -53,7 +68,8 @@ $task_form = include_template('add.php', [
 $layout_content = include_template('layout.php', [
     'title' => $title,
     'categories' => $categories,
-    'page_content' => $task_form
+    'page_content' => $task_form,
+    'user_name' => $user_name
 ]);
 
 print($layout_content);

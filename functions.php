@@ -273,11 +273,14 @@ function validate_register_form ($data, $users)
     return $errors;
 }
 
-
-function validate_auth_form ($data, $users)
+/**
+ * Функция валидирует данные формы аутентификации пользователя
+ * @param array $data - данные из формы
+ * @return array $errors - массив ошибок
+ */
+function validate_auth_form ($data)
 {
     $errors = [];
-    $user_valid = null;
 
     //    Валидация поля E-mail
     if (empty($data['email'])) {
@@ -286,33 +289,21 @@ function validate_auth_form ($data, $users)
         $errors['email'] = 'E-mail введён некорректно';
     }
 
-    foreach ($users as $user) {
-        if ($data['email'] === $user['email']) {
-            $user_valid = $user;
-            break;
-        }
-    }
-
     //    Валидация поля Пароль
     if (empty($data['password'])) {
         $errors['password'] = 'Поле пароль обязательное';
     }
 
-    //    Валидация совпадения паролей
-    if (!empty($data['email']) && !empty($data['password'])) {
-        $password_match = password_verify($data['password'], $user_valid['password']);
-        if ($password_match) {
-            session_start();
-            $_SESSION['id'] = $user_valid['id'];
-            $_SESSION['name'] = $user_valid['name'];
-            $_SESSION['email'] = $user_valid['email'];
-            var_dump('Hi ' . $user_valid['name'] . ' Welcome to Doingsdone!');
-        } else {
-            $errors['match'] = 'Данные не верны';
-        };
-    }
-
     return $errors;
+}
+
+/**
+ * Функция проверяет наличие аутентифицированного пользователя
+ * @return bool
+ */
+function isAuth ()
+{
+    return isset($_SESSION['id']);
 }
 
 /**
