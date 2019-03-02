@@ -111,7 +111,7 @@ function include_template($name, $data)
  */
 function get_users($con)
 {
-    $sql = 'SELECT email, id FROM user';
+    $sql = 'SELECT * FROM user';
     $stmt = db_get_prepare_stmt($con, $sql);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -222,6 +222,8 @@ function validate_task_form ($data, $categories)
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
         };
+    } else {
+        $errors['project'] = 'Задача должна относиться к Проекту, создайте Проект перед добавлением задачи';
     }
 
 //    Валидация поля с датой
@@ -231,11 +233,20 @@ function validate_task_form ($data, $categories)
             $errors['date'] = 'Дата должна быть больше или равна текущей';
         }
     }
-
+    var_dump($errors);
     return $errors;
 }
 
 
+function validate_category_form ($data)
+{
+    $errors = [];
+    if (empty(trim($data['name']))) {
+        $errors['name'] = 'Поле должно быть заполнено';
+    }
+
+    return $errors;
+}
 /**
  * Функция валидирует данные формы добавления пользователя
  * @param array $data - данные из формы
@@ -273,6 +284,38 @@ function validate_register_form ($data, $users)
     return $errors;
 }
 
+/**
+ * Функция валидирует данные формы аутентификации пользователя
+ * @param array $data - данные из формы
+ * @return array $errors - массив ошибок
+ */
+function validate_auth_form ($data)
+{
+    $errors = [];
+
+    //    Валидация поля E-mail
+    if (empty($data['email'])) {
+        $errors['email'] = 'Поле E-mail обязательное';
+    } else if (!filter_var(($data['email']), FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = 'E-mail введён некорректно';
+    }
+
+    //    Валидация поля Пароль
+    if (empty($data['password'])) {
+        $errors['password'] = 'Поле пароль обязательное';
+    }
+
+    return $errors;
+}
+
+/**
+ * Функция проверяет наличие аутентифицированного пользователя
+ * @return bool
+ */
+function isAuth ()
+{
+    return isset($_SESSION['id']);
+}
 
 /**
  * Функция добавляет задачу в БД
@@ -299,6 +342,16 @@ function db_add_user ($con, $data)
 {
     $sql = 'INSERT INTO user (name, email, password) 
             VALUES (?, ?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+
+function db_add_category ($con, $data)
+{
+    $sql = 'INSERT INTO category (name, user_id) 
+            VALUES (?, ?)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);

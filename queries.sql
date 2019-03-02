@@ -36,6 +36,8 @@ UPDATE task SET dt_complete = '2019-02-16 16:30:00' WHERE id = 6;
 
 -- Обновляет название задачи по ее идентификатору
 UPDATE task SET name = 'Купить корм для рыбок' WHERE id = 5;
+UPDATE task SET name = 'Сделать ДЗ по PHP' WHERE id = 15;
+
 
 -- Добавляет задачи для первого пользователя
 INSERT INTO task(name, dt_due, category_id, user_id) 

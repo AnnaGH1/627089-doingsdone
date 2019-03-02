@@ -3,10 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $title; ?></title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/flatpickr.min.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -14,61 +13,97 @@
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
+
         <header class="main-header">
-            <a href="/">
-                <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
+            <a href="#">
+                <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
             </a>
+
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="add-task.php">Добавить задачу</a>
-
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__image">
-                        <img src="img/user.png" width="40" height="40" alt="Пользователь">
-                    </div>
-
-                    <div class="user-menu__data">
-                        <p><?= $user_name ?></p>
-
-                        <a href="logout.php">Выйти</a>
-                    </div>
-                </div>
+                <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
             </div>
         </header>
 
         <div class="content">
-                <section class="content__side">
-                    <h2 class="content__side-heading">Проекты</h2>
 
-                    <nav class="main-navigation">
-                        <ul class="main-navigation__list">
-                            <?php foreach ($categories as $category): ?>
-                                <li class="main-navigation__list-item">
-                                    <a
-                                        class="main-navigation__list-item-link"
-                                        href="index.php?<?=
-                                            get_category_url($category['id']);
-                                        ?>">
-                                        <?=
-                                            $category['name'];
-                                        ?>
-                                    </a>
-                                    <span
-                                        class="main-navigation__list-item-count">
-                                            <?php echo
-                                                $category['tasks_count'];
-                                            ?>
-                                    </span>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </nav>
+            <section class="content__side">
+                <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
 
-                    <a class="button button--transparent button--plus content__side-button"
-                       href="add-category.php" target="project_add">Добавить проект</a>
-                </section>
+                <a class="button button--transparent content__side-button" href="form-authorization.html">Войти</a>
+            </section>
 
-            <main class="content__main"><?= $page_content ?></main>
+            <main class="content__main">
+                <h2 class="content__main-heading">Вход на сайт</h2>
+
+                <form class="form" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+                    <div class="form__row">
+                        <label class="form__label" for="email">E-mail <sup>*</sup></label>
+
+                        <input
+                            class="form__input <?=
+                            isset($errors['email'])
+                            ? 'form__input--error'
+                            : ''
+                        ?>"
+                            type="text"
+                            name="email"
+                            id="email"
+                            value="<?=
+                                isset($_POST['email'])
+                                ? strip_tags($_POST['email'])
+                                : ''
+                            ?>"
+                            placeholder="Введите e-mail">
+
+                        <p class="form__message">
+                            <?=
+                                isset($errors['email'])
+                                ? $errors['email']
+                                : ''
+                            ?>
+                        </p>
+                    </div>
+
+                    <div class="form__row">
+                        <label class="form__label" for="password">Пароль <sup>*</sup></label>
+
+                        <input
+                            class="form__input <?=
+                                isset($errors['password'])
+                                ? 'form__input--error'
+                                : ''
+                            ?>"
+                            type="password"
+                            name="password"
+                            id="password"
+                            value=""
+                            placeholder="Введите пароль">
+
+                        <p class="form__message">
+                            <?=
+                            isset($errors['password'])
+                                ? $errors['password']
+                                : ''
+                            ?>
+                        </p>
+                        <p class="form__message">
+                            <?=
+                            isset($errors['match'])
+                                ? $errors['match']
+                                : ''
+                            ?>
+                        </p>
+                    </div>
+
+                    <div class="form__row form__row--controls">
+                        <input class="button" type="submit" name="" value="Войти">
+                    </div>
+                </form>
+
+            </main>
+
         </div>
+
     </div>
 </div>
 
@@ -79,8 +114,6 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
-        <a class="main-footer__button button button--plus" href="pages/form-task.html">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -125,13 +158,11 @@
             <span class="visually-hidden">Разработано:</span>
 
             <a href="https://htmlacademy.ru/intensive/php">
-                <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
+                <img src="../img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
             </a>
         </div>
     </div>
 </footer>
 
-<script src="flatpickr.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
