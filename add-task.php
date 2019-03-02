@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-$task_form = include_template('add.php', [
+$task_form = include_template('add-task.php', [
     'categories' => $categories,
     'errors' => $errors
 ]);

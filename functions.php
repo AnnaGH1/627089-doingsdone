@@ -222,6 +222,8 @@ function validate_task_form ($data, $categories)
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
         };
+    } else {
+        $errors['project'] = 'Задача должна относиться к Проекту, создайте Проект перед добавлением задачи';
     }
 
 //    Валидация поля с датой
@@ -231,11 +233,20 @@ function validate_task_form ($data, $categories)
             $errors['date'] = 'Дата должна быть больше или равна текущей';
         }
     }
-
+    var_dump($errors);
     return $errors;
 }
 
 
+function validate_category_form ($data)
+{
+    $errors = [];
+    if (empty(trim($data['name']))) {
+        $errors['name'] = 'Поле должно быть заполнено';
+    }
+
+    return $errors;
+}
 /**
  * Функция валидирует данные формы добавления пользователя
  * @param array $data - данные из формы
@@ -331,6 +342,16 @@ function db_add_user ($con, $data)
 {
     $sql = 'INSERT INTO user (name, email, password) 
             VALUES (?, ?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+
+function db_add_category ($con, $data)
+{
+    $sql = 'INSERT INTO category (name, user_id) 
+            VALUES (?, ?)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);

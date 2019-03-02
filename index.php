@@ -25,7 +25,7 @@ $show_complete_tasks = rand(0, 1);
 $categories = get_categories($con, [$user_id]);
 
 if (isset($_GET['category_id'])) {
-    require_once 'category.php';
+    require_once 'check-category.php';
 } else {
     $task_items = get_tasks($con, [$user_id, $user_id]);
 }
