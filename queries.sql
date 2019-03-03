@@ -35,8 +35,7 @@ SELECT name FROM task WHERE category_id = 4;
 UPDATE task SET dt_complete = '2019-02-16 16:30:00' WHERE id = 6;
 
 -- Обновляет название задачи по ее идентификатору
-UPDATE task SET name = 'Купить корм для рыбок' WHERE id = 5;
-UPDATE task SET name = 'Сделать ДЗ по PHP' WHERE id = 15;
+UPDATE task SET name = 'Сделать ДЗ по PHP' WHERE id = 8;
 
 
 -- Добавляет задачи для первого пользователя
@@ -51,3 +50,8 @@ VALUES
 ('Купить новую машину', NULL, 5, 2),
 ('Продать старую машину', '2019-04-01 00:00:00', 5, 2);
 
+-- SELECT task.*, category.name AS category_name FROM task 
+-- JOIN category ON category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC;
+
+SELECT task.*, user.id FROM task
+JOIN user ON task.user_id = user.id WHERE user.id = 4 ORDER BY task.dt_add DESC;

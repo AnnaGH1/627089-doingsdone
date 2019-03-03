@@ -27,7 +27,7 @@ $categories = get_categories($con, [$user_id]);
 if (isset($_GET['category_id'])) {
     require_once 'check-category.php';
 } else {
-    $task_items = get_tasks($con, [$user_id, $user_id]);
+    $task_items = get_tasks($con, [$user_id]);
 }
 
 $page_content = include_template('index.php', [

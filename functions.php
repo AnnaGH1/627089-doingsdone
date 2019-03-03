@@ -149,8 +149,12 @@ function get_categories($con, $data)
  */
 function get_tasks($con, $data)
 {
-    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
-            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
+//    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+//            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
+
+    $sql = 'SELECT task.*, user.id, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+            JOIN user ON task.user_id = user.id WHERE user.id = ? ORDER BY task.dt_add DESC';
+
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -222,8 +226,6 @@ function validate_task_form ($data, $categories)
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
         };
-    } else {
-        $errors['project'] = 'Задача должна относиться к Проекту, создайте Проект перед добавлением задачи';
     }
 
 //    Валидация поля с датой
@@ -233,16 +235,32 @@ function validate_task_form ($data, $categories)
             $errors['date'] = 'Дата должна быть больше или равна текущей';
         }
     }
-    var_dump($errors);
     return $errors;
 }
 
-
-function validate_category_form ($data)
+/**
+ * Функция валидирует данные формы добавления проекта
+ * @param array $data  - данные из формы
+ * @param $categories  - категории для списка проектов
+ * @return array $errors - массив ошибок
+ */
+function validate_category_form ($data, $categories)
 {
     $errors = [];
     if (empty(trim($data['name']))) {
         $errors['name'] = 'Поле должно быть заполнено';
+    }
+
+//    Валидация поля с названием проекта
+    if (!empty($data['name'])) {
+        $user_category = $data['name'];
+
+        foreach ($categories as $category) {
+            if ($user_category === $category['name']) {
+                $errors['name'] = 'Проект уже существует';
+                break;
+            }
+        }
     }
 
     return $errors;
@@ -332,8 +350,7 @@ function db_add_task ($con, $data)
     return mysqli_insert_id($con);
 }
 
-/**
- * Функция добавляет пользователя в БД
+/** * Функция добавляет пользователя в БД
  * @param $con mysqli - ресурс соединения
  * @param $data array - данные для запроса
  * @return bool|int|string - id последнего запроса
@@ -348,6 +365,12 @@ function db_add_user ($con, $data)
 }
 
 
+/**
+ * Функция добавляет проект в БД
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return bool|int|string - id последнего запроса
+ */
 function db_add_category ($con, $data)
 {
     $sql = 'INSERT INTO category (name, user_id) 

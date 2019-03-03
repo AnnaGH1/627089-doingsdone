@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 //    Сохранить данные в БД или показать ошибки
     if (count($errors) === 0) {
+        $category_id = null;
+        if (!empty($_POST['project'])) {
+            $category_id = intval($_POST['project']);
+        }
 
         $date = null;
         if (!empty($_POST['date'])) {
@@ -49,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'name' => $_POST['name'],
             'date' => $date,
             'file' => $file_url,
-            'category_id' => $_POST['project'],
+            'category_id' => $category_id,
             'user_id' => intval($user_id)
         ]);
 
