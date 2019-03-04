@@ -25,7 +25,7 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $errors = validate_category_form($_POST);
+    $errors = validate_category_form($_POST, $categories);
 
     //    Сохранить данные в БД или показать ошибки
     if (count($errors) === 0) {

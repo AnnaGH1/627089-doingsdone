@@ -42,7 +42,12 @@
                     <nav class="main-navigation">
                         <ul class="main-navigation__list">
                             <?php foreach ($categories as $category): ?>
-                                <li class="main-navigation__list-item">
+                                <li
+                                    class="main-navigation__list-item <?=
+                                        intval($_GET['category_id']) === $category['id']
+                                        ? 'main-navigation__list-item--active'
+                                        : ''
+                                    ?>">
                                     <a
                                         class="main-navigation__list-item-link"
                                         href="index.php?<?=
@@ -80,7 +85,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="pages/form-task.html">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="add-task.php">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>

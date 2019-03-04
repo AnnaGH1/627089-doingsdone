@@ -149,8 +149,9 @@ function get_categories($con, $data)
  */
 function get_tasks($con, $data)
 {
-    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
-            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
+            WHERE user_id = ? ORDER BY task.dt_add DESC';
+
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -168,8 +169,46 @@ function get_tasks($con, $data)
  */
 function get_tasks_by_category($con, $data)
 {
-    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") as due FROM task 
+    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
             JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? AND category.id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Функция получает ассоциативный массив задач для пользователя с указанным сроком выполнения
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя и срок выполнения задачи
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_by_due_date($con, $data)
+{
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+            JOIN user ON user.id = task.user_id WHERE task.user_id = ? AND dt_due = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Функция получает ассоциативный массив просроченных задач для пользователя
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_overdue($con, $data)
+{
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+            JOIN user ON user.id = task.user_id WHERE task.user_id = ? AND task.dt_due < CURDATE()';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -222,27 +261,41 @@ function validate_task_form ($data, $categories)
         if ($category_valid === false) {
             $errors['project'] = 'Проект не существует';
         };
-    } else {
-        $errors['project'] = 'Задача должна относиться к Проекту, создайте Проект перед добавлением задачи';
     }
 
 //    Валидация поля с датой
     if (!empty($data['date'])) {
 
-        if (strtotime($data['date']) < time()) {
+        if ((strtotime($data['date']) + 60 * 60 * 24 - 1) - time () <= 0) {
             $errors['date'] = 'Дата должна быть больше или равна текущей';
         }
     }
-    var_dump($errors);
     return $errors;
 }
 
-
-function validate_category_form ($data)
+/**
+ * Функция валидирует данные формы добавления проекта
+ * @param array $data  - данные из формы
+ * @param $categories  - категории для списка проектов
+ * @return array $errors - массив ошибок
+ */
+function validate_category_form ($data, $categories)
 {
     $errors = [];
     if (empty(trim($data['name']))) {
         $errors['name'] = 'Поле должно быть заполнено';
+    }
+
+//    Валидация поля с названием проекта
+    if (!empty($data['name'])) {
+        $user_category = $data['name'];
+
+        foreach ($categories as $category) {
+            if ($user_category === $category['name']) {
+                $errors['name'] = 'Проект уже существует';
+                break;
+            }
+        }
     }
 
     return $errors;
@@ -348,10 +401,44 @@ function db_add_user ($con, $data)
 }
 
 
+/**
+ * Функция добавляет проект в БД
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return bool|int|string - id последнего запроса
+ */
 function db_add_category ($con, $data)
 {
     $sql = 'INSERT INTO category (name, user_id) 
             VALUES (?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+/**
+ * Функция отмечает задачу как выполненную
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return int|string
+ */
+function db_add_dt_complete ($con, $data)
+{
+    $sql = 'UPDATE task SET dt_complete = NOW() WHERE id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+/**
+ * Функция отмечает задачу как невыполненную
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return int|string
+ */
+function db_remove_dt_complete ($con, $data)
+{
+    $sql = 'UPDATE task SET dt_complete = null WHERE id = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);

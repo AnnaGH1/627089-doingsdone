@@ -43,6 +43,7 @@
                                                         ?>"
                 name="project"
                 id="project">
+                    <option value="">Без проекта</option>
                 <?php foreach ($categories as $category): ?>
                     <option
                         value="<?=$category['id'];?>"
