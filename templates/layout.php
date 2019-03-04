@@ -42,7 +42,12 @@
                     <nav class="main-navigation">
                         <ul class="main-navigation__list">
                             <?php foreach ($categories as $category): ?>
-                                <li class="main-navigation__list-item">
+                                <li
+                                    class="main-navigation__list-item <?=
+                                        intval($_GET['category_id']) === $category['id']
+                                        ? 'main-navigation__list-item--active'
+                                        : ''
+                                    ?>">
                                     <a
                                         class="main-navigation__list-item-link"
                                         href="index.php?<?=

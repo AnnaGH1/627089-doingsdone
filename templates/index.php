@@ -9,8 +9,15 @@
 <div class="tasks-controls">
     <nav class="tasks-switch">
         <a
-            href="/"
-            class="tasks-switch__item">Все задачи</a>
+            href="index.php?dt_due=all"
+            class="tasks-switch__item
+            <?=
+                ($_GET['dt_due'] === 'all') || empty($_GET['dt_due'])
+                ? 'tasks-switch__item--active'
+                : ''
+            ?>">
+            Все задачи
+        </a>
         <a
             href="index.php?dt_due=today"
             class="tasks-switch__item
@@ -18,7 +25,9 @@
                 $_GET['dt_due'] === 'today'
                 ? 'tasks-switch__item--active'
                 : ''
-            ?>">Повестка дня</a>
+            ?>">
+            Повестка дня
+        </a>
         <a
             href="index.php?dt_due=tomorrow"
             class="tasks-switch__item
@@ -26,10 +35,19 @@
                 $_GET['dt_due'] === 'tomorrow'
                 ? 'tasks-switch__item--active'
                 : ''
-            ?>">Завтра</a>
+            ?>">
+            Завтра
+        </a>
         <a
-            href="/"
-            class="tasks-switch__item">Просроченные</a>
+            href="index.php?dt_due=overdue"
+            class="tasks-switch__item
+            <?=
+                $_GET['dt_due'] === 'overdue'
+                ? 'tasks-switch__item--active'
+                : ''
+            ?>">
+            Просроченные
+        </a>
     </nav>
 
     <label class="checkbox">
@@ -69,7 +87,7 @@
                                 $task_item['id']
                             ?>"
                             <?=
-                                $task_item['dt_complete'] === true
+                                $task_item['dt_complete'] !== null
                                 ? 'checked'
                                 : ''
                             ?>
