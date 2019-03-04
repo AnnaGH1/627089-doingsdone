@@ -149,9 +149,6 @@ function get_categories($con, $data)
  */
 function get_tasks($con, $data)
 {
-//    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
-//            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
-
     $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
             WHERE user_id = ? ORDER BY task.dt_add DESC';
 
@@ -174,6 +171,25 @@ function get_tasks_by_category($con, $data)
 {
     $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") as due FROM task 
             JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? AND category.id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Функция получает ассоциативный массив задач для пользователя с указанным сроком выполнения
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - id пользователя и срок выполнения задачи
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_by_due_date($con, $data)
+{
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") as due from task
+            JOIN user ON user.id = task.user_id WHERE task.user_id = ? AND dt_due = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
@@ -382,6 +398,7 @@ function db_add_category ($con, $data)
 }
 
 /**
+ * Функция отмечает задачу как выполненную
  * @param $con mysqli - ресурс соединения
  * @param $data array - данные для запроса
  * @return int|string

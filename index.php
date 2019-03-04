@@ -36,6 +36,17 @@ if (isset($_GET['category_id'])) {
     $task_items = get_tasks_by_category($con, [$user_id, $user_id, $category_id]);
 }
 
+// Фильтр задач по дате
+if (isset($_GET['dt_due']) && ($_GET['dt_due'] === 'today')) {
+    $today = date('Y-m-d');
+    $task_items = get_tasks_by_due_date($con, [$user_id, $today]);
+}
+
+if (isset($_GET['dt_due']) && ($_GET['dt_due'] === 'tomorrow')) {
+    $tomorrow = date('Y-m-d', (time() + 60 * 60 * 24));
+    $task_items = get_tasks_by_due_date($con, [$user_id, $tomorrow]);
+}
+
 // Задача отмечена как выполненная
 if (isset($_GET['task_id'])) {
     require_once 'check-task.php';
