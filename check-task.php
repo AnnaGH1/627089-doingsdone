@@ -11,19 +11,18 @@ if (isAuth()) {
     exit;
 }
 
-$category_id = intval($_GET['category_id']);
-$user_category = null;
+$task_id = intval($_GET['task_id']);
+$user_task = null;
 
-foreach ($categories as $category) {
-    if ($category['id'] === $category_id) {
-        $user_category = $category;
+foreach ($task_items as $task_item) {
+    if ($task_item['id'] === $task_id) {
+        $user_task = $task_item;
         break;
     }
 }
 
-if ($user_category === null) {
+if ($user_task === null) {
     header('HTTP/1.1 404 Not Found', true, 404);
-    echo 'Проект не найден';
+    echo 'Задача не найдена';
     exit;
 }
-

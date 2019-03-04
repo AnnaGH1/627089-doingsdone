@@ -152,8 +152,8 @@ function get_tasks($con, $data)
 //    $sql = 'SELECT task.*, category.name AS category_name, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
 //            JOIN category ON category.id = task.category_id AND category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC';
 
-    $sql = 'SELECT task.*, user.id, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
-            JOIN user ON task.user_id = user.id WHERE user.id = ? ORDER BY task.dt_add DESC';
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
+            WHERE user_id = ? ORDER BY task.dt_add DESC';
 
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -231,7 +231,7 @@ function validate_task_form ($data, $categories)
 //    Валидация поля с датой
     if (!empty($data['date'])) {
 
-        if (strtotime($data['date']) < time()) {
+        if ((strtotime($data['date']) + 60 * 60 * 24 - 1) - time () <= 0) {
             $errors['date'] = 'Дата должна быть больше или равна текущей';
         }
     }
@@ -350,7 +350,8 @@ function db_add_task ($con, $data)
     return mysqli_insert_id($con);
 }
 
-/** * Функция добавляет пользователя в БД
+/**
+ * Функция добавляет пользователя в БД
  * @param $con mysqli - ресурс соединения
  * @param $data array - данные для запроса
  * @return bool|int|string - id последнего запроса
@@ -375,6 +376,19 @@ function db_add_category ($con, $data)
 {
     $sql = 'INSERT INTO category (name, user_id) 
             VALUES (?, ?)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    return mysqli_insert_id($con);
+}
+
+/**
+ * @param $con mysqli - ресурс соединения
+ * @param $data array - данные для запроса
+ * @return int|string
+ */
+function db_add_dt_complete ($con, $data)
+{
+    $sql = 'UPDATE task SET dt_complete = NOW() WHERE id = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);

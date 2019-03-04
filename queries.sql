@@ -44,14 +44,8 @@ VALUES
 ('Купить подарок другу на день рождения', '2019-03-05 00:00:00', 1, 1),
 ('Починить стиральную машину', NULL, 4, 1);
 
--- Добавляет задачи для второго пользователя
+-- Добавляет задачи
 INSERT INTO task(name, dt_due, category_id, user_id) 
 VALUES
-('Купить новую машину', NULL, 5, 2),
-('Продать старую машину', '2019-04-01 00:00:00', 5, 2);
-
--- SELECT task.*, category.name AS category_name FROM task 
--- JOIN category ON category.user_id = ? WHERE task.user_id = ? ORDER BY task.dt_add DESC;
-
-SELECT task.*, user.id FROM task
-JOIN user ON task.user_id = user.id WHERE user.id = 4 ORDER BY task.dt_add DESC;
+('Купить новую машину', NULL, 6, 4),
+('Продать старую машину', '2019-04-01 00:00:00', 6, 4);

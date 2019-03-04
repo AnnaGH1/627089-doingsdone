@@ -20,14 +20,27 @@ if (isAuth()) {
     $user_name = $_SESSION['name'];
 }
 
-$show_complete_tasks = rand(0, 1);
+// Фильтр показа выполненных задач
+if (isset($_GET['show_completed']) && (intval($_GET['show_completed'])) === 1) {
+    $show_complete_tasks = 1;
+} else {
+    $show_complete_tasks = 0;
+}
 
 $categories = get_categories($con, [$user_id]);
+$task_items = get_tasks($con, [$user_id]);
 
+// Фильтр задач по проектам
 if (isset($_GET['category_id'])) {
     require_once 'check-category.php';
-} else {
-    $task_items = get_tasks($con, [$user_id]);
+    $task_items = get_tasks_by_category($con, [$user_id, $user_id, $category_id]);
+}
+
+// Задача отмечена как выполненная
+if (isset($_GET['task_id'])) {
+    require_once 'check-task.php';
+    db_add_dt_complete($con, [$task_id]);
+    header('Location: http://' . $_SERVER['SERVER_NAME']);
 }
 
 $page_content = include_template('index.php', [
@@ -44,5 +57,4 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-
 

@@ -16,7 +16,13 @@
 
     <label class="checkbox">
         <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?=$show_complete_tasks === 1 ? 'checked' : ''; ?>>
+        <input class="checkbox__input visually-hidden show_completed" type="checkbox"
+            <?=
+                $show_complete_tasks === 1
+                ? 'checked'
+                : ''
+            ?>
+        >
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>
@@ -24,10 +30,32 @@
 <table class="tasks">
     <?php foreach ($task_items as $task_item): ?>
         <?php if($show_complete_tasks === 1 || $task_item['dt_complete'] === null): ?>
-            <tr class="tasks__item task <?=$task_item['dt_complete'] ? 'task--completed' : '';?> <?=is_task_important($task_item) ? 'task--important' : '';?>">
+            <tr class="tasks__item task
+            <?=
+                $task_item['dt_complete']
+                ? 'task--completed'
+                : ''
+            ?>
+            <?=
+                is_task_important($task_item)
+                ? 'task--important'
+                : ''
+            ?>"
+            >
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?=$task_item['dt_complete'] === true ? 'checked' : ''; ?>>
+                        <input
+                            class="checkbox__input visually-hidden task__checkbox"
+                            type="checkbox"
+                            value="<?=
+                                $task_item['id']
+                            ?>"
+                            <?=
+                                $task_item['dt_complete'] === true
+                                ? 'checked'
+                                : ''
+                            ?>
+                        >
                         <span class="checkbox__text">
                             <?=strip_tags($task_item['name']);?>
                         </span>
