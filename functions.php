@@ -219,6 +219,24 @@ function get_tasks_overdue($con, $data)
 }
 
 /**
+ * Функция получает ассоциативный массив задач по запросу пользователя
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса - запрос и id пользователя
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_by_query ($con, $data)
+{
+    $sql = 'SELECT *, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
+            WHERE MATCH(task.name) AGAINST (?) AND task.user_id = ?';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+/**
  * Функция создает параметр запроса с ключом category_id
  * @param string $category_id - значение параметра запроса
  * @return string $query - параметр запроса

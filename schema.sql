@@ -22,3 +22,6 @@ dt_due DATETIME DEFAULT NULL,
 file VARCHAR(64) DEFAULT NULL,
 category_id INT DEFAULT NULL,
 user_id INT NOT NULL);
+
+CREATE FULLTEXT INDEX task_ft_search
+ON task(name);
