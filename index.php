@@ -30,6 +30,16 @@ if (isset($_GET['show_completed']) && (intval($_GET['show_completed'])) === 1) {
 $categories = get_categories($con, [$user_id]);
 $task_items = get_tasks($con, [$user_id]);
 
+// Поиск задач
+if (isset($_GET['query'])) {
+    $query = $_GET['query'];
+    $task_items = get_tasks_by_query($con, [$query, $user_id]);
+
+    if (count($task_items) === 0) {
+        $task_items = [];
+    }
+}
+
 // Фильтр задач по проектам
 if (isset($_GET['category_id'])) {
     require_once 'check-category.php';
