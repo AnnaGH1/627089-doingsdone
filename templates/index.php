@@ -5,7 +5,11 @@
         class="search-form__input"
         type="text"
         name="query"
-        value=""
+        value="<?=
+            isset($_GET['query'])
+            ? strip_tags($_GET['query'])
+            : ''
+        ?>"
         placeholder="Поиск по задачам"
     >
 
@@ -70,7 +74,7 @@
 </div>
 
 <table class="tasks">
-    <?php if ($task_items === []): ?>
+    <?php if (!empty($_GET['query']) && $task_items === []): ?>
         <div>Ничего не найдено по вашему запросу</div>
     <?php endif; ?>
     <?php if ($task_items !== []): ?>
