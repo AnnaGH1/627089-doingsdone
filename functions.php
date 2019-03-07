@@ -245,9 +245,11 @@ function get_tasks_by_query ($con, $data)
  */
 function get_tasks_notify ($con, $data)
 {
-    $sql = 'SELECT * FROM task
-            WHERE task.dt_complete IS NULL 
-            AND task.dt_due <= DATE_ADD(NOW(), INTERVAL 1 HOUR)';
+    $sql = 'SELECT task.*, user.email, user.name AS user_name FROM task
+            JOIN user ON user.id = task.user_id
+            WHERE task.dt_complete IS NULL
+            AND user.id = ?
+            AND task.dt_due <= DATE_ADD(NOW(), INTERVAL 24 HOUR)';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
