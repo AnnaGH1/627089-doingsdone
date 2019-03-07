@@ -31,8 +31,8 @@ $categories = get_categories($con, [$user_id]);
 $task_items = get_tasks($con, [$user_id]);
 
 // Поиск задач
-if (isset($_GET['query'])) {
-    $query = $_GET['query'];
+if (isset($_GET['query']) && (!empty(trim($_GET['query'])))) {
+    $query = trim($_GET['query']);
     $task_items = get_tasks_by_query($con, [$query, $user_id]);
 
     if (count($task_items) === 0) {

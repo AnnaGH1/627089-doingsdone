@@ -236,6 +236,27 @@ function get_tasks_by_query ($con, $data)
     }
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+/**
+ * Функция получает ассоциативный массив задач, которые невыполнены и срок выполнения которых наступает с ближайший час
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_notify ($con, $data)
+{
+    $sql = 'SELECT * FROM task
+            WHERE task.dt_complete IS NULL 
+            AND task.dt_due <= DATE_ADD(NOW(), INTERVAL 1 HOUR)';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 /**
  * Функция создает параметр запроса с ключом category_id
  * @param string $category_id - значение параметра запроса
