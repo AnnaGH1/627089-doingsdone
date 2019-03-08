@@ -121,7 +121,6 @@ function get_users($con)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-
 /**
  * Функция получает ассоциативный массив категорий
  * @param mysqli $con - ресурс соединения
@@ -236,6 +235,30 @@ function get_tasks_by_query ($con, $data)
     }
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+/**
+ * Функция получает ассоциативный массив задач, которые невыполнены и срок выполнения которых наступает с ближайший час
+ * @param mysqli $con - ресурс соединения
+ * @param array $data - данные для запроса
+ * @return array - ассоциативный массив задач или пустой массив
+ */
+function get_tasks_notify ($con, $data)
+{
+    $sql = 'SELECT GROUP_CONCAT(task.name SEPARATOR ", ") tasks, user.email, user.name AS user_name 
+            FROM task
+            JOIN user ON user.id = task.user_id
+            WHERE task.dt_complete IS NULL
+            AND UNIX_TIMESTAMP(task.dt_due) - UNIX_TIMESTAMP() <= 3600
+            GROUP BY user.email';
+    $stmt = db_get_prepare_stmt($con, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($result === false) {
+        return [];
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 /**
  * Функция создает параметр запроса с ключом category_id
  * @param string $category_id - значение параметра запроса
@@ -259,7 +282,7 @@ function validate_task_form ($data, $categories)
 {
     $errors = [];
 
-    //    Валидация поля с названием задачи
+//    Валидация поля с названием задачи
     if (empty(trim($data['name']))) {
         $errors['name'] = 'Поле должно быть заполнено';
     }
@@ -318,6 +341,7 @@ function validate_category_form ($data, $categories)
 
     return $errors;
 }
+
 /**
  * Функция валидирует данные формы добавления пользователя
  * @param array $data - данные из формы
@@ -417,7 +441,6 @@ function db_add_user ($con, $data)
     mysqli_stmt_execute($stmt);
     return mysqli_insert_id($con);
 }
-
 
 /**
  * Функция добавляет проект в БД
