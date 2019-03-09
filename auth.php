@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'connection.php';
 require_once 'functions.php';
 
@@ -27,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (count($errors) === 0) {
-        session_start();
         $_SESSION['id'] = $user_valid['id'];
         $_SESSION['name'] = $user_valid['name'];
         $_SESSION['email'] = $user_valid['email'];
