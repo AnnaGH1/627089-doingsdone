@@ -24,6 +24,5 @@ foreach ($categories as $category) {
 if ($user_category === null) {
     header('HTTP/1.1 404 Not Found', true, 404);
     echo 'Проект не найден';
-    exit;
 }
 

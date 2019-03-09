@@ -24,5 +24,4 @@ foreach ($task_items as $task_item) {
 if ($user_task === null) {
     header('HTTP/1.1 404 Not Found', true, 404);
     echo 'Задача не найдена';
-    exit;
 }
