@@ -53,7 +53,7 @@
                             : ''
                         ?>
                     >
-                        <?=$category['name'];?>
+                        <?=strip_tags($category['name']);?>
                     </option>
                 <?php endforeach; ?>
             </select>

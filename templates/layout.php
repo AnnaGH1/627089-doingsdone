@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?= $user_name ?></p>
+                        <p><?= strip_tags($user_name) ?></p>
 
                         <a href="logout.php">Выйти</a>
                     </div>
@@ -54,7 +54,7 @@
                                             get_category_url($category['id']);
                                         ?>">
                                         <?=
-                                            $category['name'];
+                                            strip_tags($category['name']);
                                         ?>
                                     </a>
                                     <span
