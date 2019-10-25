@@ -1,4 +1,4 @@
-<h2 class="content__main-heading">Список задач</h2>
+<h2 class="content__main-heading">Tasks list</h2>
 
 <form class="search-form" action="index.php" method="get">
     <input
@@ -10,10 +10,10 @@
             ? strip_tags($_GET['query'])
             : ''
         ?>"
-        placeholder="Поиск по задачам"
+        placeholder="Search tasks"
     >
 
-    <input class="search-form__submit" type="submit" name="" value="Искать">
+    <input class="search-form__submit" type="submit" name="" value="Search">
 </form>
 
 <div class="tasks-controls">
@@ -26,7 +26,7 @@
                 ? 'tasks-switch__item--active'
                 : ''
             ?>">
-            Все задачи
+            All tasks
         </a>
         <a
             href="index.php?dt_due=today"
@@ -36,7 +36,7 @@
                 ? 'tasks-switch__item--active'
                 : ''
             ?>">
-            Повестка дня
+            Today
         </a>
         <a
             href="index.php?dt_due=tomorrow"
@@ -46,7 +46,7 @@
                 ? 'tasks-switch__item--active'
                 : ''
             ?>">
-            Завтра
+            Tomorrow
         </a>
         <a
             href="index.php?dt_due=overdue"
@@ -56,12 +56,11 @@
                 ? 'tasks-switch__item--active'
                 : ''
             ?>">
-            Просроченные
+            Overdue
         </a>
     </nav>
 
     <label class="checkbox">
-        <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
         <input class="checkbox__input visually-hidden show_completed" type="checkbox"
             <?=
                 $show_complete_tasks === 1
@@ -69,13 +68,13 @@
                 : ''
             ?>
         >
-        <span class="checkbox__text">Показывать выполненные</span>
+        <span class="checkbox__text">Show completed</span>
     </label>
 </div>
 
 <table class="tasks">
     <?php if (!empty($_GET['query']) && $task_items === []): ?>
-        <div>Ничего не найдено по вашему запросу</div>
+        <div>No tasks found</div>
     <?php endif; ?>
     <?php if ($task_items !== []): ?>
         <?php foreach ($task_items as $task_item): ?>

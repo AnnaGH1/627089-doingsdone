@@ -2,7 +2,7 @@
 require_once 'connection.php';
 require_once 'functions.php';
 
-$title = 'Дела в порядке - Регистрация пользователя';
+$title = 'Doingsdone - User registration';
 
 $errors = [];
 
@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = validate_register_form($_POST, get_users($con));
 
-//    Сохранить данные в БД или показать ошибки
+    // Save to database or show errors
     if (count($errors) === 0) {
         $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
 

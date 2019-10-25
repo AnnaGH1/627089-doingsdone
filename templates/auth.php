@@ -9,31 +9,31 @@
 </head>
 
 <body>
-<h1 class="visually-hidden">Дела в порядке</h1>
+<h1 class="visually-hidden">Doingsdone</h1>
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
 
         <header class="main-header">
             <a href="#">
-                <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+                <img src="../img/logo.png" width="153" height="42" alt="Doingsdone logo">
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
+                <a class="main-header__side-item button button--transparent" href="auth.php">Sign in</a>
             </div>
         </header>
 
         <div class="content">
 
             <section class="content__side">
-                <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+                <p class="content__side-info">Sign in if you already have an account</p>
 
-                <a class="button button--transparent content__side-button" href="form-authorization.html">Войти</a>
+                <a class="button button--transparent content__side-button" href="auth.php">Sign in</a>
             </section>
 
             <main class="content__main">
-                <h2 class="content__main-heading">Вход на сайт</h2>
+                <h2 class="content__main-heading">Authorization</h2>
 
                 <form class="form" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                     <div class="form__row">
@@ -53,7 +53,7 @@
                                 ? strip_tags($_POST['email'])
                                 : ''
                             ?>"
-                            placeholder="Введите e-mail">
+                            placeholder="Enter your e-mail">
 
                         <p class="form__message">
                             <?=
@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="form__row">
-                        <label class="form__label" for="password">Пароль <sup>*</sup></label>
+                        <label class="form__label" for="password">Password <sup>*</sup></label>
 
                         <input
                             class="form__input <?=
@@ -77,7 +77,7 @@
                             name="password"
                             id="password"
                             value=""
-                            placeholder="Введите пароль">
+                            placeholder="Enter your password">
 
                         <p class="form__message">
                             <?=
@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="form__row form__row--controls">
-                        <input class="button" type="submit" name="" value="Войти">
+                        <input class="button" type="submit" name="" value="Sign in">
                     </div>
                 </form>
 
@@ -110,13 +110,13 @@
 <footer class="main-footer">
     <div class="container">
         <div class="main-footer__copyright">
-            <p>© 2019, «Дела в порядке»</p>
+            <p>© 2019, «Doingsdone»</p>
 
-            <p>Веб-приложение для удобного ведения списка дел.</p>
+            <p>Web app to manage your tasks.</p>
         </div>
 
         <div class="main-footer__social social">
-            <span class="visually-hidden">Мы в соцсетях:</span>
+            <span class="visually-hidden">Find us in social networks:</span>
             <a class="social__link social__link--facebook" href="#">
                 <span class="visually-hidden">Facebook</span>
                 <svg width="27" height="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +145,7 @@
             </a>
             <span class="visually-hidden">,</span>
             <a class="social__link social__link--vkontakte" href="#">
-                <span class="visually-hidden">Вконтакте</span>
+                <span class="visually-hidden">Vkontakte</span>
                 <svg width="27" height="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
                     <circle stroke="#879296" fill="none" cx="13.5" cy="13.5" r="12.666"/>
                     <path fill="#879296"
@@ -155,7 +155,7 @@
         </div>
 
         <div class="main-footer__developed-by">
-            <span class="visually-hidden">Разработано:</span>
+            <span class="visually-hidden">Developed:</span>
 
             <a href="https://htmlacademy.ru/intensive/php">
                 <img src="../img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">

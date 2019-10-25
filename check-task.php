@@ -2,12 +2,12 @@
 
 require_once 'functions.php';
 
-// Проверка открытой сессии
+// Check open session
 if (isAuth()) {
     $user_id = $_SESSION['id'];
 } else {
     header("HTTP/1.0 403 Forbidden");
-    echo '<div>Требуется аутентификация пользователя, доступ запрещен <a href="index.php">Перейти на главную страницу</a></div>';
+    echo '<div>User authentication required, access denied <a href="index.php">Go to Home page</a></div>';
     exit;
 }
 

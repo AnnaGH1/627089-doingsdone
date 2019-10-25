@@ -29,7 +29,7 @@ if ($taskCheckboxes.length) {
 
 flatpickr('#date', {
   enableTime: false,
-  dateFormat: "d.m.Y",
+  dateFormat: "M d Y",
   time_24hr: true,
-  locale: "ru"
+  locale: "en"
 });

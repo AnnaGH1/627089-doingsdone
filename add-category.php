@@ -5,17 +5,17 @@ session_start();
 require_once 'connection.php';
 require_once 'functions.php';
 
-$title = 'Дела в порядке - Добавление проекта';
+$title = 'Doingsdone - Add project';
 $user_id = null;
 $user_name = null;
 
-// Проверка открытой сессии
+// Check open session
 if (isset($_SESSION['id'])) {
     $user_id = $_SESSION['id'];
     $user_name = $_SESSION['name'];
 } else {
     header("HTTP/1.0 403 Forbidden");
-    echo '<div>Требуется аутентификация пользователя, доступ запрещен <a href="index.php">Перейти на главную страницу</a></div>';
+    echo '<div>User authentication required, access denied <a href="index.php">Go to Home page</a></div>';
     exit;
 }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = validate_category_form($_POST, $categories);
 
-    //    Сохранить данные в БД или показать ошибки
+    // Save to database or show errors
     if (count($errors) === 0) {
         $category = $_POST['name'];
 

@@ -2,7 +2,7 @@
 $con = mysqli_connect('localhost', 'root', '', '627089-doingsdone');
 
 if ($con === false) {
-print('Ошибка подключения: ' . mysqli_connect_error());
+print('Connection error: ' . mysqli_connect_error());
 exit;
 }
 

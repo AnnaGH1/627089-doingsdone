@@ -1,14 +1,15 @@
 <?php
 session_start();
 
-date_default_timezone_set("Europe/Moscow");
+date_default_timezone_set("America/New_York");
 
 require_once 'connection.php';
 require_once 'functions.php';
 
-$title = 'Дела в порядке';
+$title = 'Doingsdone';
+$show_complete_tasks = 0;
 
-// Если открытой сессии нет, перенаправление на страницу аутентификации
+// If session not opened, show register and sign in page
 if (!isAuth()) {
     $guest_content = include_template('guest.php', []);
     print($guest_content);
@@ -20,7 +21,7 @@ if (isAuth()) {
     $user_name = $_SESSION['name'];
 }
 
-// Фильтр показа выполненных задач
+// Show completed tasks
 if (isset($_GET['show_completed']) && (intval($_GET['show_completed'])) === 1) {
     $show_complete_tasks = 1;
 } else {
@@ -30,7 +31,7 @@ if (isset($_GET['show_completed']) && (intval($_GET['show_completed'])) === 1) {
 $categories = get_categories($con, [$user_id]);
 $task_items = get_tasks($con, [$user_id]);
 
-// Поиск задач
+// Search tasks
 if (isset($_GET['query']) && (!empty(trim($_GET['query'])))) {
     $query = trim($_GET['query']);
     $task_items = get_tasks_by_query($con, [$query, $user_id]);
@@ -40,13 +41,13 @@ if (isset($_GET['query']) && (!empty(trim($_GET['query'])))) {
     }
 }
 
-// Фильтр задач по проектам
+// Filter tasks by projects
 if (isset($_GET['category_id'])) {
     require_once 'check-category.php';
     $task_items = get_tasks_by_category($con, [$user_id, $user_id, $category_id]);
 }
 
-// Фильтры задач
+// Filter tasks
 if (isset($_GET['dt_due']) && ($_GET['dt_due'] === 'all')) {
     if (isset($_GET['category_id'])) {
         require_once 'check-category.php';
@@ -70,14 +71,14 @@ if (isset($_GET['dt_due']) && ($_GET['dt_due'] === 'overdue')) {
     $task_items = get_tasks_overdue($con, [$user_id]);
 }
 
-// Задача отмечена как выполненная
+// Task completed
 if (isset($_GET['task_id']) && $_GET['check'] === '1') {
     require_once 'check-task.php';
     db_add_dt_complete($con, [$task_id]);
     header('Location: http://' . $_SERVER['SERVER_NAME']);
 }
 
-// Задача отмечена как невыполненная
+// Task not completed
 if (isset($_GET['task_id']) && $_GET['check'] === '0') {
     require_once 'check-task.php';
     db_remove_dt_complete($con, [$task_id]);

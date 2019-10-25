@@ -2,12 +2,12 @@
 
 require_once 'functions.php';
 
-// Проверка открытой сессии
+// Check open session
 if (isAuth()) {
     $user_id = $_SESSION['id'];
 } else {
     header("HTTP/1.0 403 Forbidden");
-    echo '<div>Требуется аутентификация пользователя, доступ запрещен <a href="index.php">Перейти на главную страницу</a></div>';
+    echo '<div>User authentication required, access denied <a href="index.php">Go to Home page</a></div>';
     exit;
 }
 
@@ -23,6 +23,6 @@ foreach ($categories as $category) {
 
 if ($user_category === null) {
     header('HTTP/1.1 404 Not Found', true, 404);
-    echo 'Проект не найден';
+    echo 'Project not found';
 }
 

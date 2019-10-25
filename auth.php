@@ -3,7 +3,7 @@ session_start();
 require_once 'connection.php';
 require_once 'functions.php';
 
-$title = 'Дела в порядке - Аутентификация пользователя';
+$title = 'Doingsdone - User authentication';
 
 $errors = [];
 
@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    //    Валидация совпадения паролей
+    // Validate password match
     if (!empty($_POST['email']) && !empty($_POST['password'])) {
         if (!password_verify($_POST['password'], $user_valid['password'])) {
-            $errors['match'] = 'Вы ввели неверный email/пароль';
+            $errors['match'] = 'Incorrect email/password';
         }
     }
 

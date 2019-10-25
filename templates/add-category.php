@@ -1,9 +1,9 @@
 <main class="content__main">
-    <h2 class="content__main-heading">Добавление проекта</h2>
+    <h2 class="content__main-heading">Add project</h2>
 
     <form class="form"  action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
         <div class="form__row">
-            <label class="form__label" for="project_name">Название <sup>*</sup></label>
+            <label class="form__label" for="project_name">Title <sup>*</sup></label>
 
             <input
                 class="form__input <?=
@@ -15,7 +15,7 @@
                 name="name"
                 id="project_name"
                 value=""
-                placeholder="Введите название проекта">
+                placeholder="Enter your title">
             <p class="form__message"><?=
                     isset($errors['name'])
                     ? $errors['name']
@@ -26,7 +26,7 @@
         </div>
 
         <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="" value="Добавить">
+            <input class="button" type="submit" name="" value="Add">
         </div>
     </form>
 </main>
