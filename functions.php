@@ -148,7 +148,7 @@ function get_categories($con, $data)
  */
 function get_tasks($con, $data)
 {
-    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task 
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%b %d %Y") AS due FROM task 
             WHERE user_id = ? ORDER BY task.dt_add DESC';
 
     $stmt = db_get_prepare_stmt($con, $sql, $data);
@@ -187,7 +187,7 @@ function get_tasks_by_category($con, $data)
  */
 function get_tasks_by_due_date($con, $data)
 {
-    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%b %d %Y") AS due FROM task
             JOIN user ON user.id = task.user_id WHERE task.user_id = ? AND dt_due = ?';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -206,7 +206,7 @@ function get_tasks_by_due_date($con, $data)
  */
 function get_tasks_overdue($con, $data)
 {
-    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%d.%m.%Y") AS due FROM task
+    $sql = 'SELECT task.*, DATE_FORMAT(task.dt_due, "%b %d %Y") AS due FROM task
             JOIN user ON user.id = task.user_id WHERE task.user_id = ? AND task.dt_due < CURDATE()';
     $stmt = db_get_prepare_stmt($con, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -284,7 +284,7 @@ function validate_task_form ($data, $categories)
 
 //    Валидация поля с названием задачи
     if (empty(trim($data['name']))) {
-        $errors['name'] = 'Поле должно быть заполнено';
+        $errors['name'] = 'Title is required';
     }
 
 //    Валидация поля с названием проекта
@@ -300,7 +300,7 @@ function validate_task_form ($data, $categories)
         }
 
         if ($category_valid === false) {
-            $errors['project'] = 'Проект не существует';
+            $errors['project'] = 'Project does not exist';
         };
     }
 
@@ -308,7 +308,7 @@ function validate_task_form ($data, $categories)
     if (!empty($data['date'])) {
 
         if ((strtotime($data['date']) + 60 * 60 * 24 - 1) - time () <= 0) {
-            $errors['date'] = 'Дата должна быть больше или равна текущей';
+            $errors['date'] = 'Date must be the current date or later';
         }
     }
     return $errors;
@@ -324,7 +324,7 @@ function validate_category_form ($data, $categories)
 {
     $errors = [];
     if (empty(trim($data['name']))) {
-        $errors['name'] = 'Поле должно быть заполнено';
+        $errors['name'] = 'Title is required';
     }
 
 //    Валидация поля с названием проекта
@@ -333,7 +333,7 @@ function validate_category_form ($data, $categories)
 
         foreach ($categories as $category) {
             if ($user_category === $category['name']) {
-                $errors['name'] = 'Проект уже существует';
+                $errors['name'] = 'Project already exists';
                 break;
             }
         }
@@ -354,13 +354,13 @@ function validate_register_form ($data, $users)
 
 //    Валидация поля E-mail
     if (empty($data['email'])) {
-        $errors['email'] = 'Поле E-mail обязательное';
+        $errors['email'] = 'E-mail is required';
     } else if (!filter_var(($_POST['email']), FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'E-mail введён некорректно';
+        $errors['email'] = 'E-mail is incorrect';
     } else {
         foreach ($users as $user) {
             if ($data['email'] === $user['email']) {
-                $errors['email'] = 'E-mail уже занят';
+                $errors['email'] = 'E-mail is already taken';
                 break;
             }
         }
@@ -368,12 +368,12 @@ function validate_register_form ($data, $users)
 
 //    Валидация поля Пароль
     if (empty($data['password'])) {
-        $errors['password'] = 'Поле Пароль обязательное';
+        $errors['password'] = 'Password is required';
     }
 
 //    Валидация поля Имя
     if (empty($data['name'])) {
-        $errors['name'] = 'Поле Имя обязательное';
+        $errors['name'] = 'Name is required';
     }
 
     return $errors;
@@ -390,14 +390,14 @@ function validate_auth_form ($data)
 
     //    Валидация поля E-mail
     if (empty($data['email'])) {
-        $errors['email'] = 'Поле E-mail обязательное';
+        $errors['email'] = 'E-mail is required';
     } else if (!filter_var(($data['email']), FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'E-mail введён некорректно';
+        $errors['email'] = 'E-mail is incorrect';
     }
 
     //    Валидация поля Пароль
     if (empty($data['password'])) {
-        $errors['password'] = 'Поле пароль обязательное';
+        $errors['password'] = 'Password is required';
     }
 
     return $errors;

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -10,16 +10,16 @@
 </head>
 
 <body>
-<h1 class="visually-hidden">Дела в порядке</h1>
+<h1 class="visually-hidden">Doingsdone</h1>
 
 <div class="page-wrapper">
     <div class="container container--with-sidebar">
         <header class="main-header">
             <a href="/">
-                <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
+                <img src="img/logo.png" width="153" height="42" alt="Doingsdone logo">
             </a>
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="add-task.php">Добавить задачу</a>
+                <a class="main-header__side-item button button--plus open-modal" href="add-task.php">Add task</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
@@ -29,7 +29,7 @@
                     <div class="user-menu__data">
                         <p><?= strip_tags($user_name) ?></p>
 
-                        <a href="logout.php">Выйти</a>
+                        <a href="logout.php">Sign out</a>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
 
         <div class="content">
                 <section class="content__side">
-                    <h2 class="content__side-heading">Проекты</h2>
+                    <h2 class="content__side-heading">Projects</h2>
 
                     <nav class="main-navigation">
                         <ul class="main-navigation__list">
@@ -69,7 +69,7 @@
                     </nav>
 
                     <a class="button button--transparent button--plus content__side-button"
-                       href="add-category.php" target="project_add">Добавить проект</a>
+                       href="add-category.php" target="project_add">Add project</a>
                 </section>
 
             <main class="content__main"><?= $page_content ?></main>
@@ -80,15 +80,15 @@
 <footer class="main-footer">
     <div class="container">
         <div class="main-footer__copyright">
-            <p>© 2019, «Дела в порядке»</p>
+            <p>© 2019, «Doingsdone»</p>
 
-            <p>Веб-приложение для удобного ведения списка дел.</p>
+            <p>Web app to manage your tasks.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="add-task.php">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="add-task.php">Add task</a>
 
         <div class="main-footer__social social">
-            <span class="visually-hidden">Мы в соцсетях:</span>
+            <span class="visually-hidden">Find us in social networks:</span>
             <a class="social__link social__link--facebook" href="#">
                 <span class="visually-hidden">Facebook</span>
                 <svg width="27" height="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
@@ -117,7 +117,7 @@
             </a>
             <span class="visually-hidden">,</span>
             <a class="social__link social__link--vkontakte" href="#">
-                <span class="visually-hidden">Вконтакте</span>
+                <span class="visually-hidden">Vkontakte</span>
                 <svg width="27" height="27" viewBox="0 0 27 27" xmlns="http://www.w3.org/2000/svg">
                     <circle stroke="#879296" fill="none" cx="13.5" cy="13.5" r="12.666"/>
                     <path fill="#879296"
@@ -127,7 +127,7 @@
         </div>
 
         <div class="main-footer__developed-by">
-            <span class="visually-hidden">Разработано:</span>
+            <span class="visually-hidden">Developed:</span>
 
             <a href="https://htmlacademy.ru/intensive/php">
                 <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
