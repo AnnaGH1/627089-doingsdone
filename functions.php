@@ -1,12 +1,12 @@
 <?php
 /**
- * Создает подготовленное выражение на основе готового SQL запроса и переданных данных
+ * Creates a prepared statement from an SQL query and data
  *
- * @param mysqli $link Ресурс соединения
- * @param string $sql SQL запрос с плейсхолдерами вместо значений
- * @param array $data Данные для вставки на место плейсхолдеров
+ * @param mysqli $link - link identifier
+ * @param string $sql - SQL query with placeholders
+ * @param array $data - data to replace placeholders
  *
- * @return mysqli_stmt Подготовленное выражение
+ * @return mysqli_stmt - prepared statement
  */
 function db_get_prepare_stmt($link, $sql, $data = []) {
     $stmt = mysqli_prepare($link, $sql);
@@ -46,10 +46,10 @@ function db_get_prepare_stmt($link, $sql, $data = []) {
 }
 
 /**
- * Функция подсчитывает число задач, относящихся к указанной категории
- * @param array $task_list - массив задач, каждая задача - ассоциативный массив и содержит ключ 'category_name'
- * @param string $task_category - значение ключа 'category_name'
- * @return int $counter - число задач
+ * Counts tasks by category
+ * @param array $task_list - tasks, each task is an associative array that has a 'category_name' key
+ * @param string $task_category - value corresponding to a 'category_name' key
+ * @return int $counter - tasks count
  */
 function calculate_tasks_by_category ($task_list, $task_category)
 {
@@ -63,9 +63,9 @@ function calculate_tasks_by_category ($task_list, $task_category)
 }
 
 /**
- * Функция проверяет срок выполнения задачи, если срок истекает в ближайшие 24 часа, возвращает true
- * @param array $task - ассоциативный массив задачи
- * @return boolean $status - статус задачи
+ * Checks the task due date, if due within 24h, returns true
+ * @param array $task - task (associative array)
+ * @return boolean $status - task status
  */
 function is_task_important ($task)
 {
@@ -81,10 +81,10 @@ function is_task_important ($task)
 }
 
 /**
- * Функция подключает шаблон с данными
- * @param string $name - имя файла в папке 'templates'
- * @param array $data - ассоциативный массив, содержащий переменные для данного шаблона, имя ключа совпадает с именем переменной
- * @return string $result - пустая строка, если шаблон не существует, или код html
+ * Includes a template
+ * @param string $name - name of the file in 'templates' folder
+ * @param array $data - associative array, contains variables for a given template, a key and a variable name match
+ * @return string $result - empty string if a template does not exist or html code
  */
 function include_template($name, $data)
 {
@@ -105,9 +105,9 @@ function include_template($name, $data)
 }
 
 /**
- * Функция получает ассоциативный массив пользователей
- * @param mysqli $con - ресурс соединения
- * @return array - ассоциативный массив пользователей или пустой массив
+ * Gets users
+ * @param mysqli $con - connection
+ * @return array - users associative array or an empty array
  */
 function get_users($con)
 {
@@ -122,10 +122,10 @@ function get_users($con)
 }
 
 /**
- * Функция получает ассоциативный массив категорий
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - id пользователя
- * @return array - ассоциативный массив категорий или пустой массив
+ * Gets categories
+ * @param mysqli $con - connection
+ * @param array $data - query data - user id
+ * @return array - categories associative array or an empty array
  */
 function get_categories($con, $data)
 {
@@ -141,10 +141,10 @@ function get_categories($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив задач для пользователя и их категории
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - id пользователя
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks and their categories for a user
+ * @param mysqli $con - connection
+ * @param array $data - query data - user id
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks($con, $data)
 {
@@ -161,10 +161,10 @@ function get_tasks($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив задач для пользователя в выбранной категории
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - id пользователя и id категории
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks in a selected category for a user
+ * @param mysqli $con - connection
+ * @param array $data - query data - user id and category id
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks_by_category($con, $data)
 {
@@ -180,10 +180,10 @@ function get_tasks_by_category($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив задач для пользователя с указанным сроком выполнения
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - id пользователя и срок выполнения задачи
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks with a selected due date for a user
+ * @param mysqli $con - connection
+ * @param array $data - query data - user id and task due date
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks_by_due_date($con, $data)
 {
@@ -199,10 +199,10 @@ function get_tasks_by_due_date($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив просроченных задач для пользователя
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - id пользователя
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks overdue for a user
+ * @param mysqli $con - connection
+ * @param array $data - query data - user id
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks_overdue($con, $data)
 {
@@ -218,10 +218,10 @@ function get_tasks_overdue($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив задач по запросу пользователя
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса - запрос и id пользователя
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks queried by a user
+ * @param mysqli $con - connection
+ * @param array $data - query data - query and user id
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks_by_query ($con, $data)
 {
@@ -237,10 +237,10 @@ function get_tasks_by_query ($con, $data)
 }
 
 /**
- * Функция получает ассоциативный массив задач, которые невыполнены и срок выполнения которых наступает с ближайший час
- * @param mysqli $con - ресурс соединения
- * @param array $data - данные для запроса
- * @return array - ассоциативный массив задач или пустой массив
+ * Gets tasks that are not completed and due within an hour
+ * @param mysqli $con - connection
+ * @param array $data - query data
+ * @return array - tasks associative array or an empty array
  */
 function get_tasks_notify ($con, $data)
 {
@@ -260,9 +260,9 @@ function get_tasks_notify ($con, $data)
 }
 
 /**
- * Функция создает параметр запроса с ключом category_id
- * @param string $category_id - значение параметра запроса
- * @return string $query - параметр запроса
+ * Generates query string that contains a 'category_id' key
+ * @param string $category_id - query string value
+ * @return string $query - query string
  */
 function get_category_url($category_id)
 {
@@ -273,21 +273,21 @@ function get_category_url($category_id)
 }
 
 /**
- * Функция валидирует данные формы добавления задачи
- * @param array $data - данные из формы
- * @param array $categories - категории для списка проектов
- * @return array $errors - массив ошибок
+ * Validates a new task form
+ * @param array $data - form data
+ * @param array $categories - tasks categories
+ * @return array $errors - errors
  */
 function validate_task_form ($data, $categories)
 {
     $errors = [];
 
-//    Валидация поля с названием задачи
+    // Task
     if (empty(trim($data['name']))) {
         $errors['name'] = 'Title is required';
     }
 
-//    Валидация поля с названием проекта
+    // Project
     if (!empty($data['project'])) {
         $user_category = intval($data['project']);
         $category_valid = false;
@@ -304,7 +304,7 @@ function validate_task_form ($data, $categories)
         };
     }
 
-//    Валидация поля с датой
+    // Date
     if (!empty($data['date'])) {
 
         if ((strtotime($data['date']) + 60 * 60 * 24 - 1) - time () <= 0) {
@@ -315,10 +315,10 @@ function validate_task_form ($data, $categories)
 }
 
 /**
- * Функция валидирует данные формы добавления проекта
- * @param array $data  - данные из формы
- * @param $categories  - категории для списка проектов
- * @return array $errors - массив ошибок
+ * Validates a new project form
+ * @param array $data  - form data
+ * @param $categories  - tasks categories
+ * @return array $errors - errors
  */
 function validate_category_form ($data, $categories)
 {
@@ -327,7 +327,7 @@ function validate_category_form ($data, $categories)
         $errors['name'] = 'Title is required';
     }
 
-//    Валидация поля с названием проекта
+    // Project
     if (!empty($data['name'])) {
         $user_category = $data['name'];
 
@@ -343,16 +343,16 @@ function validate_category_form ($data, $categories)
 }
 
 /**
- * Функция валидирует данные формы добавления пользователя
- * @param array $data - данные из формы
- * @param array $users - данные пользователей
- * @return array $errors - массив ошибок
+ * Validates a user registration form
+ * @param array $data - form data
+ * @param array $users - users data
+ * @return array $errors - errors
  */
 function validate_register_form ($data, $users)
 {
     $errors = [];
 
-//    Валидация поля E-mail
+    // E-mail
     if (empty($data['email'])) {
         $errors['email'] = 'E-mail is required';
     } else if (!filter_var(($_POST['email']), FILTER_VALIDATE_EMAIL)) {
@@ -366,12 +366,12 @@ function validate_register_form ($data, $users)
         }
     }
 
-//    Валидация поля Пароль
+    // Password
     if (empty($data['password'])) {
         $errors['password'] = 'Password is required';
     }
 
-//    Валидация поля Имя
+    // Name
     if (empty($data['name'])) {
         $errors['name'] = 'Name is required';
     }
@@ -380,22 +380,22 @@ function validate_register_form ($data, $users)
 }
 
 /**
- * Функция валидирует данные формы аутентификации пользователя
- * @param array $data - данные из формы
- * @return array $errors - массив ошибок
+ * Validates a user authentication form
+ * @param array $data - form data
+ * @return array $errors - errors
  */
 function validate_auth_form ($data)
 {
     $errors = [];
 
-    //    Валидация поля E-mail
+    // E-mail
     if (empty($data['email'])) {
         $errors['email'] = 'E-mail is required';
     } else if (!filter_var(($data['email']), FILTER_VALIDATE_EMAIL)) {
         $errors['email'] = 'E-mail is incorrect';
     }
 
-    //    Валидация поля Пароль
+    // Password
     if (empty($data['password'])) {
         $errors['password'] = 'Password is required';
     }
@@ -404,7 +404,7 @@ function validate_auth_form ($data)
 }
 
 /**
- * Функция проверяет наличие аутентифицированного пользователя
+ * Checks if a current user is an authenticated user
  * @return bool
  */
 function isAuth ()
@@ -413,10 +413,10 @@ function isAuth ()
 }
 
 /**
- * Функция добавляет задачу в БД
- * @param $con mysqli - ресурс соединения
- * @param $data array - данные для запроса
- * @return bool|int|string - id последнего запроса
+ * Adds a task to a database
+ * @param $con mysqli - connection
+ * @param $data array - query data
+ * @return bool|int|string - last query id
  */
 function db_add_task ($con, $data)
 {
@@ -428,10 +428,10 @@ function db_add_task ($con, $data)
 }
 
 /**
- * Функция добавляет пользователя в БД
- * @param $con mysqli - ресурс соединения
- * @param $data array - данные для запроса
- * @return bool|int|string - id последнего запроса
+ * Adds a user to a database
+ * @param $con mysqli - connection
+ * @param $data array - query data
+ * @return bool|int|string - last query id
  */
 function db_add_user ($con, $data)
 {
@@ -443,10 +443,10 @@ function db_add_user ($con, $data)
 }
 
 /**
- * Функция добавляет проект в БД
- * @param $con mysqli - ресурс соединения
- * @param $data array - данные для запроса
- * @return bool|int|string - id последнего запроса
+ * Adds a category to a database
+ * @param $con mysqli - connection
+ * @param $data array - query data
+ * @return bool|int|string - last query id
  */
 function db_add_category ($con, $data)
 {
@@ -458,9 +458,9 @@ function db_add_category ($con, $data)
 }
 
 /**
- * Функция отмечает задачу как выполненную
- * @param $con mysqli - ресурс соединения
- * @param $data array - данные для запроса
+ * Sets task status to completed
+ * @param $con mysqli - connection
+ * @param $data array - query data
  * @return int|string
  */
 function db_add_dt_complete ($con, $data)
@@ -472,9 +472,9 @@ function db_add_dt_complete ($con, $data)
 }
 
 /**
- * Функция отмечает задачу как невыполненную
- * @param $con mysqli - ресурс соединения
- * @param $data array - данные для запроса
+ * Sets task status to not completed
+ * @param $con mysqli - connection
+ * @param $data array - query data
  * @return int|string
  */
 function db_remove_dt_complete ($con, $data)
